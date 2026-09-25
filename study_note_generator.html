@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Note Generator - Create Beautiful Notes for Any Topic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Indie+Flower&family=Pacifico&family=Permanent+Marker&family=Satisfy&family=Comfortaa:wght@400;700&family=Fredoka:wght@400;700&family=Patrick+Hand&family=Quicksand:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 300px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .format-hint {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .format-hint code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-download {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-download:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .color-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #2c3e50;
+            transform: scale(1.15);
+        }
+
+        .font-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .font-option {
+            padding: 6px 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .font-option:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .font-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .font-caveat {
+            font-family: 'Caveat', cursive;
+        }
+
+        .font-indie {
+            font-family: 'Indie Flower', cursive;
+        }
+
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+
+        .font-permanent {
+            font-family: 'Permanent Marker', cursive;
+        }
+
+        .font-satisfy {
+            font-family: 'Satisfy', cursive;
+        }
+
+        .font-comfortaa {
+            font-family: 'Comfortaa', cursive;
+        }
+
+        .font-patrick {
+            font-family: 'Patrick Hand', cursive;
+        }
+
+        .font-quicksand {
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .font-fredoka {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Preview Styles */
+        #preview {
+            max-height: 800px;
+            overflow-y: auto;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .note-page {
+            width: 100%;
+            background: linear-gradient(to bottom, #fdfbf7 0%, #fffcf9 100%);
+            position: relative;
+            font-size: 18px;
+            line-height: 1.6;
+            font-family: 'Caveat', cursive;
+        }
+
+        .note-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(to right, #ff6b6b 0%, #ff6b6b 3%, transparent 3%),
+                repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, #e8d4e8 28px, #e8d4e8 29px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .note-content {
+            position: relative;
+            z-index: 2;
+            padding: 40px 35px 40px 50px;
+            min-height: 800px;
+        }
+
+        .note-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .note-section {
+            margin-bottom: 25px;
+        }
+
+        .note-section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+        }
+
+        .note-content-item {
+            margin-left: 20px;
+            margin-bottom: 12px;
+            color: #34495e;
+            line-height: 1.7;
+        }
+
+        .note-highlight {
+            background: rgba(102, 126, 234, 0.15);
+            border-left: 4px solid;
+            padding: 12px 14px;
+            margin: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .empty-state {
+            color: #999;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .panel:first-child {
+                display: none;
+            }
+
+            #preview {
+                max-height: none;
+                overflow: visible;
+            }
+
+            .note-page {
+                page-break-after: always;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Input Panel -->
+        <div class="panel">
+            <h2>📝 Create Study Notes</h2>
+
+            <div class="form-group">
+                <label>📌 Topic Title</label>
+                <input type="text" id="topicTitle" placeholder="e.g., Cloud Computing Fundamentals, Database Design" value="GCP Fundamentals">
+            </div>
+
+            <div class="form-group">
+                <label>🎨 Theme Color</label>
+                <div class="color-selector">
+                    <div class="color-option selected" style="background: #667eea;" data-color="#667eea" title="Blue"></div>
+                    <div class="color-option" style="background: #764ba2;" data-color="#764ba2" title="Purple"></div>
+                    <div class="color-option" style="background: #f093fb;" data-color="#f093fb" title="Pink"></div>
+                    <div class="color-option" style="background: #4facfe;" data-color="#4facfe" title="Sky Blue"></div>
+                    <div class="color-option" style="background: #00f2fe;" data-color="#00f2fe" title="Cyan"></div>
+                    <div class="color-option" style="background: #43e97b;" data-color="#43e97b" title="Green"></div>
+                    <div class="color-option" style="background: #fa709a;" data-color="#fa709a" title="Red"></div>
+                    <div class="color-option" style="background: #feca57;" data-color="#feca57" title="Yellow"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>✏️ Font:</label>
+                <div class="font-selector">
+                    <div class="font-option font-caveat selected" data-font="'Caveat', cursive" title="Caveat">Caveat</div>
+                    <div class="font-option font-indie" data-font="'Indie Flower', cursive" title="Indie Flower">Indie</div>
+                    <div class="font-option font-pacifico" data-font="'Pacifico', cursive" title="Pacifico">Pacifico</div>
+                    <div class="font-option font-permanent" data-font="'Permanent Marker', cursive" title="Marker">Marker</div>
+                    <div class="font-option font-satisfy" data-font="'Satisfy', cursive" title="Satisfy">Satisfy</div>
+                    <div class="font-option font-comfortaa" data-font="'Comfortaa', cursive" title="Comfortaa">Comfortaa</div>
+                    <div class="font-option font-patrick" data-font="'Patrick Hand', cursive" title="Patrick">Patrick</div>
+                    <div class="font-option font-quicksand" data-font="'Quicksand', sans-serif" title="Quicksand">Quicksand</div>
+                    <div class="font-option font-fredoka" data-font="'Fredoka', sans-serif" title="Fredoka">Fredoka</div>
+                    <div class="font-option font-poppins" data-font="'Poppins', sans-serif" title="Poppins">Poppins</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>📚 Content (Use Format Below)</label>
+                <textarea id="contentInput" placeholder="Paste your content here following the format...">## Q1. What is GCP?
+GCP is a suite of cloud computing services offered by Google with computing power, storage, databases, networking, AI/ML, and analytics tools.
+
+✓ Key Benefit: Scalable, secure, reliable and pay-as-you-go cloud services.
+
+## Q2. Main GCP Services
+- Compute Engine: Virtual machines
+- Cloud Storage: Object storage
+- BigQuery: Data warehouse
+- Kubernetes Engine: Container orchestration
+- Cloud Networking: VPC and networking
+- AI/ML: Vertex AI
+
+💡 Think: Compute, Storage, Database, Networking, Big Data, AI/ML, DevOps</textarea>
+            </div>
+
+            <div class="format-hint">
+                <strong>📋 Format Guide:</strong><br>
+                <code>## Section Title</code> - Creates sections<br>
+                <code>Plain text</code> - Regular content<br>
+                <code>- Bullet point</code> - Creates bullet lists<br>
+                <code>✓ Key text</code> - Green highlight box<br>
+                <code>💡 Tip text</code> - Yellow highlight box<br>
+                <code>⭐ Important</code> - Purple highlight box
+            </div>
+
+            <div class="button-group">
+                <button class="btn-generate" onclick="generateNotes()">✨ Generate Notes</button>
+                <button class="btn-download" id="downloadBtn" onclick="downloadPDF()" disabled>📥 Download PDF</button>
+            </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="panel">
+            <h2>👁️ Preview</h2>
+            <div id="preview">
+                <div class="empty-state">👈 Enter content and click "Generate Notes" to see preview</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentThemeColor = '#667eea';
+        let currentFont = "'Caveat', cursive";
+        let notesGenerated = false;
+
+        // Color selection
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                currentThemeColor = this.dataset.color;
+                if (notesGenerated) generateNotes();
+            });
+        });
+
+        // Font selection
+        document.querySelectorAll('.font-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.font-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                currentFont = this.dataset.font;
+                if (notesGenerated) generateNotes();
+            });
+        });
+
+        function generateNotes() {
+            const title = document.getElementById('topicTitle').value || 'Study Notes';
+            const content = document.getElementById('contentInput').value;
+
+            if (!content.trim()) {
+                alert('Please enter some content!');
+                return;
+            }
+
+            const preview = document.getElementById('preview');
+            preview.innerHTML = '';
+
+            const page = document.createElement('div');
+            page.className = 'note-page';
+
+            const noteContent = document.createElement('div');
+            noteContent.className = 'note-content';
+            noteContent.style.fontFamily = currentFont;
+
+            // Add title
+            const titleEl = document.createElement('div');
+            titleEl.className = 'note-title';
+            titleEl.textContent = '☁️ ' + title + ' ☁️';
+            noteContent.appendChild(titleEl);
+
+            // Parse content
+            const lines = content.split('\n');
+            let currentSection = null;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+
+                if (line.startsWith('##')) {
+                    // Section title
+                    const section = document.createElement('div');
+                    section.className = 'note-section';
+
+                    const sectionTitle = document.createElement('div');
+                    sectionTitle.className = 'note-section-title';
+                    sectionTitle.style.color = currentThemeColor;
+                    sectionTitle.style.textDecorationColor = currentThemeColor;
+                    sectionTitle.textContent = line.replace('##', '').trim();
+
+                    section.appendChild(sectionTitle);
+                    noteContent.appendChild(section);
+                    currentSection = section;
+                } else if (line.startsWith('✓')) {
+                    // Green highlight
+                    const highlight = document.createElement('div');
+                    highlight.className = 'note-highlight';
+                    highlight.style.borderLeftColor = '#4caf50';
+                    highlight.style.background = 'rgba(76, 175, 80, 0.15)';
+                    highlight.style.color = '#2e7d32';
+                    highlight.textContent = line;
+                    (currentSection || noteContent).appendChild(highlight);
+                } else if (line.startsWith('💡')) {
+                    // Yellow highlight
+                    const highlight = document.createElement('div');
+                    highlight.className = 'note-highlight';
+                    highlight.style.borderLeftColor = '#ffc107';
+                    highlight.style.background = 'rgba(255, 193, 7, 0.15)';
+                    highlight.style.color = '#f57f17';
+                    highlight.textContent = line;
+                    (currentSection || noteContent).appendChild(highlight);
+                } else if (line.startsWith('⭐')) {
+                    // Purple highlight
+                    const highlight = document.createElement('div');
+                    highlight.className = 'note-highlight';
+                    highlight.style.borderLeftColor = '#9c27b0';
+                    highlight.style.background = 'rgba(156, 39, 176, 0.15)';
+                    highlight.style.color = '#6a1b9a';
+                    highlight.textContent = line;
+                    (currentSection || noteContent).appendChild(highlight);
+                } else if (line.startsWith('-')) {
+                    // Bullet point
+                    const item = document.createElement('div');
+                    item.className = 'note-content-item';
+                    item.style.marginLeft = '40px';
+                    item.textContent = line;
+                    (currentSection || noteContent).appendChild(item);
+                } else {
+                    // Regular text
+                    const item = document.createElement('div');
+                    item.className = 'note-content-item';
+                    item.textContent = line;
+                    (currentSection || noteContent).appendChild(item);
+                }
+            });
+
+            page.appendChild(noteContent);
+            preview.appendChild(page);
+
+            notesGenerated = true;
+            document.getElementById('downloadBtn').disabled = false;
+        }
+
+        function downloadPDF() {
+            const title = document.getElementById('topicTitle').value || 'StudyNotes';
+            window.print();
+        }
+
+        // Generate preview on load with sample content
+        window.addEventListener('load', function() {
+            generateNotes();
+        });
+
+        // Auto-generate on input
+        document.getElementById('contentInput').addEventListener('change', generateNotes);
+        document.getElementById('topicTitle').addEventListener('change', generateNotes);
+    </script>
+</body>
+</html>

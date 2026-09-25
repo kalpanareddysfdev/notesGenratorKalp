@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Fundamentals Study Note</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Indie+Flower&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Caveat', cursive;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header-controls {
+            width: 800px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #4caf50;
+        }
+
+        .pages-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 800px;
+        }
+
+        .page {
+            width: 800px;
+            min-height: 1000px;
+            background: linear-gradient(to bottom, #fdfbf7 0%, #fffcf9 100%);
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            font-size: 18px;
+            line-height: 1.6;
+            page-break-after: always;
+        }
+
+        /* Lined paper background */
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(to right, #ff6b6b 0%, #ff6b6b 3%, transparent 3%),
+                repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, #e8d4e8 28px, #e8d4e8 29px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            padding: 40px 35px 40px 50px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .title-cloud {
+            font-size: 40px;
+            display: inline-block;
+            margin: 0 8px;
+        }
+
+        .question {
+            margin-bottom: 32px;
+            page-break-inside: avoid;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .question-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .question-text {
+            text-decoration: underline;
+            text-decoration-color: #667eea;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+
+        .answer {
+            margin-left: 50px;
+            margin-bottom: 12px;
+            color: #34495e;
+            line-height: 1.7;
+        }
+
+        .definition-box {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+            margin-left: 50px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+
+        .callout {
+            margin: 12px 0 12px 50px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border-left: 4px solid;
+            font-size: 17px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .callout-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .callout.key-benefit {
+            background: rgba(76, 175, 80, 0.15);
+            border-left-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .callout.remember {
+            background: rgba(156, 39, 176, 0.15);
+            border-left-color: #9c27b0;
+            color: #6a1b9a;
+        }
+
+        .callout.tip {
+            background: rgba(255, 193, 7, 0.15);
+            border-left-color: #ffc107;
+            color: #f57f17;
+        }
+
+        .callout.golden {
+            background: rgba(255, 193, 7, 0.2);
+            border-left-color: #ffc107;
+            color: #f57f17;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 2px dashed #ffc107;
+            border-left: 4px solid #ffc107;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0 12px 50px;
+        }
+
+        .service-item {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            color: #2c3e50;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .service-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        table {
+            width: calc(100% - 50px);
+            margin: 12px 0 12px 50px;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #667eea;
+            font-size: 15px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 11px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #2c3e50;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .icon {
+            display: inline-block;
+            margin: 0 3px;
+        }
+
+        .checkmark {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .star {
+            color: #ffc107;
+        }
+
+        .cloud {
+            font-size: 28px;
+            margin: 0 2px;
+        }
+
+        .section-divider {
+            margin: 20px 50px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .service-detail {
+            margin-left: 50px;
+            margin-bottom: 20px;
+            background: rgba(102, 126, 234, 0.08);
+            border-left: 4px solid #667eea;
+            padding: 14px;
+            border-radius: 8px;
+        }
+
+        .service-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .service-icon-large {
+            font-size: 32px;
+            margin-right: 8px;
+        }
+
+        .service-description {
+            color: #34495e;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .service-use-case {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 3px solid #4caf50;
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            color: #2e7d32;
+            font-size: 16px;
+        }
+
+        .config-steps {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 3px solid #ffc107;
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            color: #f57f17;
+            font-size: 16px;
+        }
+
+        .pricing-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        .comparison-matrix {
+            width: calc(100% - 50px);
+            margin: 12px 0 12px 50px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .matrix-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            border-bottom: 1px solid #e0e0e0;
+            min-height: 0;
+        }
+
+        .matrix-row:last-child {
+            border-bottom: none;
+        }
+
+        .matrix-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .matrix-content {
+            background: white;
+            padding: 12px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .quick-reference {
+            background: rgba(156, 39, 176, 0.1);
+            border: 2px dashed #9c27b0;
+            padding: 16px;
+            margin: 12px 50px;
+            border-radius: 10px;
+            color: #6a1b9a;
+            font-weight: 600;
+        }
+
+        .quick-reference h4 {
+            margin-bottom: 8px;
+        }
+
+        .quick-reference ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .quick-reference li::before {
+            content: "▸ ";
+            color: #9c27b0;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .header-controls {
+                display: none;
+            }
+
+            .pages-container {
+                gap: 0;
+                width: 100%;
+            }
+
+            .page {
+                box-shadow: none;
+                page-break-after: always;
+                margin: 0;
+            }
+
+            .page::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-controls">
+        <button class="btn" onclick="window.print()">📥 Download as PDF</button>
+        <button class="btn btn-secondary" onclick="scrollToTop()">⬆️ Back to Top</button>
+    </div>
+
+    <div class="pages-container">
+
+    <!-- PAGE 1: FUNDAMENTALS -->
+    <div class="page">
+        <div class="content">
+            <div class="title">
+                <span class="title-cloud">☁️</span>
+                TOP 50 GCP CONCEPT QUESTIONS
+                <span class="title-cloud">☁️</span>
+            </div>
+
+            <!-- Question 1 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div class="question-text">What is Google Cloud Platform (GCP)?</div>
+                </div>
+                <div class="definition-box">
+                    GCP is a suite of cloud computing services offered by Google. It includes computing power, storage, databases, networking, AI/ML, and analytics tools delivered over Google's global infrastructure.
+                </div>
+                <div class="callout key-benefit">
+                    <span class="callout-icon">✓</span>
+                    <span><strong>Key Benefit:</strong> Scalable, secure, reliable and pay-as-you-go cloud services.</span>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div class="question-text">What are the main services provided by GCP?</div>
+                </div>
+                <div class="service-grid">
+                    <div class="service-item"><div class="service-icon">⚙️</div> Compute Engine</div>
+                    <div class="service-item"><div class="service-icon">🗂️</div> Cloud Storage</div>
+                    <div class="service-item"><div class="service-icon">🔍</div> BigQuery</div>
+                    <div class="service-item"><div class="service-icon">⚓</div> Kubernetes Engine</div>
+                    <div class="service-item"><div class="service-icon">🌐</div> Cloud Networking</div>
+                    <div class="service-item"><div class="service-icon">💡</div> AI/ML (Vertex AI)</div>
+                </div>
+                <div class="callout tip">
+                    <span class="callout-icon">💡</span>
+                    <span><strong>Think:</strong> Compute, Storage, Database, Networking, Big Data, AI/ML, DevOps</span>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div class="question-text">What is the difference between GCP, AWS, and Azure?</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>GCP</th>
+                            <th>AWS</th>
+                            <th>Azure</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Company</strong></td>
+                            <td>Google</td>
+                            <td>Amazon</td>
+                            <td>Microsoft</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Strength</strong></td>
+                            <td>Data Analytics, AI/ML, BigQuery</td>
+                            <td>Wide range of services, mature ecosystem</td>
+                            <td>Hybrid cloud, enterprise integration</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pricing</strong></td>
+                            <td>Per-second billing in many services</td>
+                            <td>Pay-as-you-go, Spot instances</td>
+                            <td>Pay-as-you-go, Enterprise agreements</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Best For</strong></td>
+                            <td>Data, ML, Startups</td>
+                            <td>Large scale, Global applications</td>
+                            <td>Enterprises, .NET, Hybrid</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div class="question-text">What is a Project in GCP?</div>
+                </div>
+                <div class="definition-box">
+                    A Project is a logical container that holds all your resources and services in GCP. It helps you organize, manage billing, set permissions, and isolate resources.
+                </div>
+                <div class="callout remember">
+                    <span class="callout-icon">⭐</span>
+                    <span><strong>Remember:</strong> All resources in GCP must belong to a Project.</span>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div class="question-text">What is an Organization in GCP?</div>
+                </div>
+                <div class="definition-box">
+                    An Organization is the top-level entity that represents your company. It allows you to manage multiple projects, users, billing accounts, and policies centrally.
+                </div>
+                <div class="callout key-benefit">
+                    <span class="callout-icon">✓</span>
+                    <span><strong>Key Point:</strong> Organization → Folder → Project → Resources</span>
+                </div>
+                <div class="callout golden">
+                    <span class="callout-icon">⭐</span>
+                    <span><strong>Golden Rule:</strong> Organization is for <em>management</em>, Project is for <em>usage</em>!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: COMPUTE & STORAGE SERVICES -->
+    <div class="page">
+        <div class="content">
+            <div class="section-divider">📊 COMPUTE SERVICES</div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">⚙️</span>Compute Engine</div>
+                <div class="service-description">Virtual machines (VMs) running on Google's infrastructure. Full control over OS, applications, and environment.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Web hosting, database servers, high-performance computing, legacy app migration</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create VM instance → Choose machine type → Select OS → Configure firewall rules → SSH & deploy</div>
+                <div class="pricing-badge">Pricing: Per-second billing, discounts for sustained use</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">⚓</span>Google Kubernetes Engine (GKE)</div>
+                <div class="service-description">Managed Kubernetes service for containerized applications. Auto-scaling, load balancing, and self-healing.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Microservices, containerized apps, CI/CD pipelines, scalable workloads</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create cluster → Push Docker image to Container Registry → Deploy pods → Configure services</div>
+                <div class="pricing-badge">Pricing: Pay for nodes + minimal cluster fee</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🔥</span>Cloud Run</div>
+                <div class="service-description">Serverless container platform. Run stateless containers without managing servers.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> REST APIs, event-driven functions, background jobs, microservices</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Containerize app → Push to Container Registry → Deploy Cloud Run service → Get auto URL</div>
+                <div class="pricing-badge">Pricing: Per request pricing, free tier included</div>
+            </div>
+
+            <div class="section-divider">🗂️ STORAGE & DATABASE SERVICES</div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🗂️</span>Cloud Storage</div>
+                <div class="service-description">Scalable object storage for unstructured data (files, images, videos, backups).</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Data lakes, media files, backups, static website hosting, data archives</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create bucket → Set storage class → Configure access control → Upload objects</div>
+                <div class="pricing-badge">Pricing: Storage + egress charges, Coldline/Archive for cheaper archival</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🗄️</span>Cloud SQL</div>
+                <div class="service-description">Fully managed relational database (MySQL, PostgreSQL, SQL Server). Automatic backups and high availability.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Web apps, transactional data, OLTP systems, traditional databases</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create instance → Choose DB type/version → Set machine type → Create database → Connect from app</div>
+                <div class="pricing-badge">Pricing: Per instance + storage + backup charges</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🔗</span>Firestore & Cloud Datastore</div>
+                <div class="service-description">NoSQL document databases. Firestore is the newer, more scalable version with real-time sync.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Mobile apps, real-time collaboration, user profiles, content management, IoT</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Enable Firestore → Create database → Set security rules → Start writing documents</div>
+                <div class="pricing-badge">Pricing: Per read/write/delete operations + storage</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: DATA & ANALYTICS -->
+    <div class="page">
+        <div class="content">
+            <div class="section-divider">📈 DATA & ANALYTICS SERVICES</div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🔍</span>BigQuery</div>
+                <div class="service-description">Serverless data warehouse for analyzing massive datasets. Lightning-fast SQL queries on petabytes of data.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Data analytics, business intelligence, log analysis, machine learning datasets</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create dataset → Load data (CSV/JSON/Parquet) → Write SQL queries → Visualize results</div>
+                <div class="pricing-badge">Pricing: Per GB queried (first 1 TB free/month), flat-rate pricing available</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">📊</span>Cloud Dataflow</div>
+                <div class="service-description">Managed batch and stream data processing service. Unified API for data pipelines (Apache Beam).</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> ETL pipelines, real-time data processing, data transformation, log processing</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Write Beam pipeline → Submit job → Monitor execution → Store results in BigQuery/Storage</div>
+                <div class="pricing-badge">Pricing: Per vCPU-hour + storage charges</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🎯</span>Cloud Pub/Sub</div>
+                <div class="service-description">Messaging service for event streaming. Decouple services with pub/sub architecture.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Real-time messaging, IoT events, log processing, microservices communication</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create topic → Create subscription → Publish messages → Subscribe and consume</div>
+                <div class="pricing-badge">Pricing: Per GB published/pulled</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">📡</span>Cloud Dataproc</div>
+                <div class="service-description">Managed Hadoop/Spark clusters. Run distributed data processing on Spark, Hadoop, Hive, Pig.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Big data processing, Spark jobs, legacy Hadoop migrations, batch jobs</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create cluster → Submit Spark job → Monitor execution → Auto-scaling applies</div>
+                <div class="pricing-badge">Pricing: Per node-hour + disk charges</div>
+            </div>
+
+            <div class="section-divider">🤖 AI/ML SERVICES</div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">💡</span>Vertex AI</div>
+                <div class="service-description">Unified ML platform for building, training, and deploying ML models. Pre-trained models + custom training.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Computer vision, NLP, forecasting, custom ML models, AutoML for beginners</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Prepare dataset → Train model (AutoML or custom) → Evaluate → Deploy to endpoint</div>
+                <div class="pricing-badge">Pricing: Per training hour + per prediction</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🧠</span>Pre-trained Models (Vision, Language, etc.)</div>
+                <div class="service-description">Use Google's pre-built models for common tasks: image recognition, text analysis, translation, speech-to-text.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Quick AI implementation without ML expertise, document processing, image analysis</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Install SDK → Call Vision/Language API → Send image/text → Get results</div>
+                <div class="pricing-badge">Pricing: Per request or per 1000 requests</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: NETWORKING & SECURITY -->
+    <div class="page">
+        <div class="content">
+            <div class="section-divider">🌐 NETWORKING SERVICES</div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🔗</span>Virtual Private Cloud (VPC)</div>
+                <div class="service-description">Private network for GCP resources. Control IP ranges, subnets, routing, and firewall rules.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Network isolation, multi-tier architectures, hybrid cloud setup, security segmentation</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create VPC → Define subnets → Set firewall rules → Configure Cloud Router for hybrid</div>
+                <div class="pricing-badge">Pricing: Free (minimal charges for advanced features)</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">⚡</span>Cloud Load Balancing</div>
+                <div class="service-description">Distribute traffic across resources. Global load balancing with low latency routing.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> High availability, auto-scaling, geographic distribution, traffic management</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create backend service → Configure health checks → Create load balancer → Assign target groups</div>
+                <div class="pricing-badge">Pricing: Per forwarding rule + data processing charges</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🔒</span>Cloud CDN</div>
+                <div class="service-description">Content Delivery Network. Cache content globally for faster delivery to users.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Static content distribution, media streaming, website acceleration, API response caching</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Enable CDN on load balancer → Set cache policies → Configure cache keys</div>
+                <div class="pricing-badge">Pricing: Per GB cached/served</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🛡️</span>Cloud Armor</div>
+                <div class="service-description">DDoS protection and web application firewall. Protect against malicious traffic and attacks.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> DDoS defense, WAF rules, geo-blocking, rate limiting, bot protection</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create security policy → Add rules → Attach to load balancer → Monitor threats</div>
+                <div class="pricing-badge">Pricing: Free for basic DDoS, charges for advanced WAF rules</div>
+            </div>
+
+            <div class="section-divider">🔐 SECURITY & MANAGEMENT</div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🔑</span>Cloud KMS (Key Management Service)</div>
+                <div class="service-description">Manage encryption keys. Hardware security module (HSM) backed key management.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Data encryption, compliance requirements, key rotation, secret management</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create keyring → Create key → Grant permissions → Use in encryption operations</div>
+                <div class="pricing-badge">Pricing: Per key version + per encryption/decryption operation</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">📋</span>Identity & Access Management (IAM)</div>
+                <div class="service-description">Control who has access to what. Role-based access control (RBAC) for GCP resources.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Permission management, least privilege access, audit trails, resource sharing</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create service accounts → Assign roles → Create key pairs → Use in applications</div>
+                <div class="pricing-badge">Pricing: Free (included with GCP)</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">👁️</span>Cloud Audit Logs</div>
+                <div class="service-description">Track activity and changes to GCP resources. Compliance and security monitoring.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Compliance auditing, security investigation, change tracking, forensics</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Enable audit logging → Export logs to BigQuery/Storage → Create dashboards</div>
+                <div class="pricing-badge">Pricing: Storage charges for logs, free first 50GB/month</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: DEPLOYMENT & MANAGEMENT -->
+    <div class="page">
+        <div class="content">
+            <div class="section-divider">⚙️ DEPLOYMENT & MANAGEMENT SERVICES</div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">📦</span>Container Registry & Artifact Registry</div>
+                <div class="service-description">Store and manage Docker container images. Vulnerability scanning and access control.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Docker image storage, CI/CD pipelines, container deployment, multi-region distribution</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Configure Docker authentication → Push image → Pull in deployment → Deploy to GKE/Run</div>
+                <div class="pricing-badge">Pricing: Storage charges + network egress</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🚀</span>Cloud Build</div>
+                <div class="service-description">Serverless CI/CD platform. Build, test, and deploy applications automatically.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Continuous integration, automated testing, Docker builds, deployment automation</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create cloudbuild.yaml → Connect repo → Push commit → Automatic build & deploy</div>
+                <div class="pricing-badge">Pricing: Free 120 minutes/day, then per minute charges</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">⚙️</span>Cloud Functions</div>
+                <div class="service-description">Serverless functions for event-driven computing. Run code without managing servers.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> HTTP APIs, event handlers, background jobs, webhooks, scheduled tasks</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Write function → Deploy with CLI → Configure trigger → Function auto-scales</div>
+                <div class="pricing-badge">Pricing: Per million invocations + compute time (free tier available)</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">📊</span>Cloud Monitoring & Logging</div>
+                <div class="service-description">Monitor application performance and system health. Centralized logging and alerting.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Application monitoring, performance tracking, alerting, troubleshooting, SLO tracking</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Enable monitoring → Create dashboards → Set alert policies → Route notifications</div>
+                <div class="pricing-badge">Pricing: Free first 50GB logs/month, storage charges after</div>
+            </div>
+
+            <div class="section-divider">📱 DEVELOPER & INTEGRATION SERVICES</div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">🔌</span>API Management</div>
+                <div class="service-description">Create, manage, and secure APIs. Rate limiting, authentication, versioning, analytics.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Public APIs, microservice gateways, third-party integrations, API monetization</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create API → Define methods → Set policies → Deploy proxy → Monitor usage</div>
+                <div class="pricing-badge">Pricing: Subscription based + per policy calls</div>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-name"><span class="service-icon-large">📨</span>Cloud Tasks</div>
+                <div class="service-description">Manage large-scale task processing. Guaranteed delivery and retry logic.</div>
+                <div class="service-use-case">✓ <strong>Use Case:</strong> Job queuing, distributed task execution, asynchronous processing, deferred jobs</div>
+                <div class="config-steps">🔧 <strong>Basic Setup:</strong> Create queue → Create tasks → Cloud Tasks handles retry & delivery</div>
+                <div class="pricing-badge">Pricing: Per million task operations</div>
+            </div>
+
+            <div class="quick-reference">
+                <h4>⚡ GCP Quick Reference Checklist</h4>
+                <ul>
+                    <li><strong>Getting Started:</strong> Create GCP Project → Set up billing → Enable APIs → Configure IAM</li>
+                    <li><strong>Common Architecture:</strong> VPC → Load Balancer → Cloud Run/GKE → Cloud SQL → Cloud Storage</li>
+                    <li><strong>For Web Apps:</strong> Cloud Run or GKE + Cloud SQL + Cloud Storage + Cloud CDN</li>
+                    <li><strong>For Data Analytics:</strong> Cloud Storage → Dataflow → BigQuery → Data Studio visualization</li>
+                    <li><strong>For ML Projects:</strong> BigQuery (data) → Vertex AI (training) → Cloud Endpoints (deploy)</li>
+                    <li><strong>Security First:</strong> Use VPC, IAM, Cloud KMS, Cloud Armor, enable Audit Logs</li>
+                    <li><strong>Cost Optimization:</strong> Use sustained use discounts, set budgets, monitor in Cloud Monitoring</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    </div><!-- End pages-container -->
+
+    <script>
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Keyboard shortcut for PDF download (Ctrl+P or Cmd+P opens print dialog)
+        document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+                event.preventDefault();
+                window.print();
+            }
+        });
+    </script>
+</body>
+</html>
