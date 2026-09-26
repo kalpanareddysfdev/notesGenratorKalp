@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Note Generator - Create Beautiful Notes for Any Topic</title>
+    <title>Kalpana's Study Note Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Indie+Flower&family=Pacifico&family=Permanent+Marker&family=Satisfy&family=Comfortaa:wght@400;700&family=Fredoka:wght@400;700&family=Patrick+Hand&family=Quicksand:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -255,6 +255,8 @@
             font-size: 18px;
             line-height: 1.6;
             font-family: 'Caveat', cursive;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
 
         .note-page::before {
@@ -269,6 +271,8 @@
                 repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, #e8d4e8 28px, #e8d4e8 29px);
             pointer-events: none;
             z-index: 1;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
 
         .note-content {
@@ -321,6 +325,31 @@
             padding: 40px 20px;
         }
 
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            font-size: 48px;
+            color: rgba(0, 0, 0, 0.08);
+            font-weight: 700;
+            z-index: 0;
+            pointer-events: none;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            line-height: 1;
+        }
+
+        @media print {
+            .watermark {
+                color: rgba(0, 0, 0, 0.06);
+            }
+        }
+
         @media print {
             body {
                 background: white;
@@ -347,6 +376,16 @@
 
             .note-page {
                 page-break-after: always;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            .note-page::before {
+                display: block !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
         }
 
@@ -361,7 +400,7 @@
     <div class="container">
         <!-- Input Panel -->
         <div class="panel">
-            <h2>📝 Create Study Notes</h2>
+            <h2>🎓 Kalpana's Study Note Generator</h2>
 
             <div class="form-group">
                 <label>📌 Topic Title</label>
@@ -555,6 +594,12 @@ GCP is a suite of cloud computing services offered by Google with computing powe
                     (currentSection || noteContent).appendChild(item);
                 }
             });
+
+            // Add watermark
+            const watermark = document.createElement('div');
+            watermark.className = 'watermark';
+            watermark.textContent = "Kalpana's Study Notes";
+            page.appendChild(watermark);
 
             page.appendChild(noteContent);
             preview.appendChild(page);
