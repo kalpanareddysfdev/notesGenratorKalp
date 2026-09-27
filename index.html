@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kalpana's study tools, reports, and PDF notes.">
+  <title>Kalpana's Learning Hub</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #172033;
+      background: #f4f7fb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body { margin: 0; }
+
+    main {
+      width: min(960px, 100%);
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+
+    header { margin-bottom: 36px; }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 6vw, 3rem);
+      letter-spacing: -0.04em;
+    }
+
+    header p, .description { color: #657087; }
+    header p { margin: 0; font-size: 1.05rem; }
+    section + section { margin-top: 36px; }
+    h2 { margin: 0 0 14px; font-size: 1.35rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      display: block;
+      padding: 20px;
+      border: 1px solid #e2e7ef;
+      border-radius: 14px;
+      background: #fff;
+      color: inherit;
+      text-decoration: none;
+      transition: border-color 150ms ease, transform 150ms ease;
+    }
+
+    .card:hover, .card:focus-visible {
+      border-color: #2855d9;
+      transform: translateY(-2px);
+    }
+
+    .card:focus-visible { outline: 3px solid #2855d955; }
+    .card h3 { margin: 0 0 7px; font-size: 1.05rem; }
+    .card p { margin: 0; color: #657087; line-height: 1.5; }
+    .card .action { display: inline-block; margin-top: 14px; color: #2855d9; font-weight: 650; }
+
+    footer {
+      margin-top: 40px;
+      color: #657087;
+      font-size: 0.9rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Kalpana's Learning Hub</h1>
+      <p>Study tools, reports, and notes in one place.</p>
+    </header>
+
+    <section aria-labelledby="apps-heading">
+      <h2 id="apps-heading">Apps and reports</h2>
+      <div class="grid">
+        <a class="card" href="study_note_generator.html">
+          <h3>Study Note Generator</h3>
+          <p>Create and format study notes for a topic.</p>
+          <span class="action">Open app &rarr;</span>
+        </a>
+        <a class="card" href="gcp_study_note.html">
+          <h3>GCP Fundamentals Study Note</h3>
+          <p>Browse the Google Cloud fundamentals study note.</p>
+          <span class="action">Open study note &rarr;</span>
+        </a>
+        <a class="card" href="Kalpana%27s%20PG%20Buying%20Report.html">
+          <h3>PG Buying Report</h3>
+          <p>Review the report and compare the accommodation costs.</p>
+          <span class="action">Open report &rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <section aria-labelledby="pdfs-heading">
+      <h2 id="pdfs-heading">PDF files</h2>
+      <div class="grid">
+        <a class="card" href="Claude%20tutorial.pdf">
+          <h3>Claude Tutorial</h3>
+          <p>PDF document</p>
+          <span class="action">View PDF &rarr;</span>
+        </a>
+        <a class="card" href="GCP%20Fundamentals%20Study%20Note.pdf">
+          <h3>GCP Fundamentals Study Note</h3>
+          <p>PDF document</p>
+          <span class="action">View PDF &rarr;</span>
+        </a>
+        <a class="card" href="Study%20Note%20Generator%20-%20Create%20Beautiful%20Notes%20for%20Any%20Topic.pdf">
+          <h3>Study Note Generator Guide</h3>
+          <p>PDF document</p>
+          <span class="action">View PDF &rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <footer>Each app and document opens on its own page.</footer>
+  </main>
+</body>
+</html>
