@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PG Profit & Vacancy Calculator</title>
+<style>
+  :root { --ink:#172033; --muted:#657087; --line:#e2e7ef; --bg:#f4f7fb; --blue:#2855d9; --green:#087f5b; --amber:#b57a10; --red:#c2414b; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  .wrap { max-width:1120px; margin:0 auto; padding:28px 18px 48px; }
+  header { margin-bottom:22px; }
+  h1 { margin:0 0 6px; font-size:clamp(25px,4vw,34px); letter-spacing:-.7px; }
+  .sub { margin:0; color:var(--muted); }
+  .layout { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr); gap:18px; align-items:start; }
+  .panel { background:white; border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:0 5px 20px #20345b08; }
+  h2 { margin:0 0 15px; font-size:18px; }
+  h3 { margin:20px 0 10px; font-size:14px; color:#45516a; text-transform:uppercase; letter-spacing:.07em; }
+  .fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+  label { display:block; font-size:13px; font-weight:650; color:#46516a; margin-bottom:6px; }
+  input { width:100%; min-width:0; border:1px solid #cfd7e5; border-radius:9px; padding:11px 12px; font:inherit; color:var(--ink); background:#fff; }
+  input:focus { outline:3px solid #2855d921; border-color:var(--blue); }
+  .hint { color:var(--muted); font-size:12px; margin-top:5px; }
+  .room-head,.room-row { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:9px; align-items:center; }
+  .room-head { color:var(--muted); font-size:12px; font-weight:700; padding:0 0 8px; }
+  .room-row { padding:10px 0; border-top:1px solid var(--line); }
+  .room-name { font-weight:700; }
+  .room-row input { padding:9px 8px; }
+  .results { position:sticky; top:16px; }
+  .hero { padding:18px; border-radius:13px; background:#eef3ff; margin-bottom:12px; }
+  .hero .eyebrow { font-size:12px; color:#53648d; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+  .hero .amount { font-size:clamp(28px,4vw,38px); font-weight:800; letter-spacing:-1px; margin:5px 0; }
+  .hero .caption { color:#53648d; font-size:13px; }
+  .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .stat { border:1px solid var(--line); border-radius:12px; padding:13px; }
+  .stat .name { color:var(--muted); font-size:12px; }
+  .stat .val { font-size:20px; font-weight:750; margin-top:5px; overflow-wrap:anywhere; }
+  .positive { color:var(--green); } .negative { color:var(--red); }
+  .breakdown { margin-top:17px; }
+  .line { display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid #edf0f5; }
+  .line span:first-child { color:#59647a; }
+  .line strong { text-align:right; }
+  .line.total { border-bottom:0; border-top:2px solid var(--ink); margin-top:5px; padding-top:13px; font-size:16px; }
+  .note { margin:14px 0 0; padding:12px; background:#fff8e8; border-radius:10px; color:#76541a; font-size:12px; }
+  .scenarios { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:14px; }
+  .scenario { border:1px solid var(--line); border-left-width:6px; border-radius:12px; padding:14px; background:#fff; }
+  .scenario .name { font-size:12px; font-weight:700; color:#46516a; text-transform:uppercase; letter-spacing:.05em; }
+  .scenario .val { font-size:clamp(18px,2.4vw,23px); font-weight:800; margin:7px 0 4px; overflow-wrap:anywhere; }
+  .scenario .meta { font-size:12px; color:var(--muted); }
+  .scenario .tag { display:inline-block; margin-top:8px; font-size:11px; font-weight:750; padding:3px 8px; border-radius:999px; }
+  .grade-green { border-left-color:var(--green); } .grade-green .val { color:var(--green); } .grade-green .tag { background:#e2f6ef; color:var(--green); }
+  .grade-yellow { border-left-color:var(--amber); } .grade-yellow .val { color:var(--amber); } .grade-yellow .tag { background:#fdf3dc; color:#8a6512; }
+  .grade-red { border-left-color:var(--red); } .grade-red .val { color:var(--red); } .grade-red .tag { background:#fbe7e9; color:var(--red); }
+  .legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:10px; font-size:11px; color:var(--muted); }
+  .legend i { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
+  @media(max-width:560px) { .scenarios { grid-template-columns:1fr; } }
+  .actions { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:16px; }
+  button { border:0; border-radius:9px; padding:10px 14px; background:var(--blue); color:white; font:inherit; font-weight:700; cursor:pointer; }
+  button.secondary { background:#edf1f8; color:#33415c; }
+  @media(max-width:800px) { .layout { grid-template-columns:1fr; } .results { position:static; } }
+  @media(max-width:480px) { .fields { grid-template-columns:1fr; } .panel { padding:15px; } .room-head,.room-row { grid-template-columns:.8fr 1fr 1fr 1fr; gap:5px; } .room-head { font-size:10px; } .room-row input { font-size:13px; padding:8px 5px; } }
+  @media print { body { background:white; } .wrap { padding:0; } .layout { grid-template-columns:1fr 1fr; } .panel { box-shadow:none; break-inside:avoid; } .actions { display:none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>PG Profit & Vacancy Calculator</h1>
+    <p class="sub">Estimate monthly profit at full occupancy versus today’s vacancies before you buy or take over a PG.</p>
+  </header>
+  <div class="layout">
+    <section class="panel">
+      <h2>Property & room details</h2>
+      <div class="fields">
+        <div><label for="rent">Monthly property rent (₹)</label><input id="rent" type="number" min="0" value="100000"></div>
+        <div><label for="advance">Refundable advance / deposit (₹)</label><input id="advance" type="number" min="0" value="500000"><div class="hint">Shown separately; not deducted from monthly profit.</div></div>
+      </div>
+      <h3>Room setup & monthly price</h3>
+      <div class="room-head"><div>Sharing</div><div>Rooms</div><div>Rent / bed (₹)</div><div>Vacant beds</div></div>
+      <div class="room-row"><div class="room-name">2-share</div><input aria-label="Number of 2-share rooms" id="rooms2" type="number" min="0" value="3"><input aria-label="Monthly rent per 2-share bed" id="price2" type="number" min="0" value="10000"><input aria-label="Vacant 2-share beds" id="vac2" type="number" min="0" value="1"></div>
+      <div class="room-row"><div class="room-name">3-share</div><input aria-label="Number of 3-share rooms" id="rooms3" type="number" min="0" value="5"><input aria-label="Monthly rent per 3-share bed" id="price3" type="number" min="0" value="8000"><input aria-label="Vacant 3-share beds" id="vac3" type="number" min="0" value="2"></div>
+      <div class="room-row"><div class="room-name">4-share</div><input aria-label="Number of 4-share rooms" id="rooms4" type="number" min="0" value="0"><input aria-label="Monthly rent per 4-share bed" id="price4" type="number" min="0" value="7000"><input aria-label="Vacant 4-share beds" id="vac4" type="number" min="0" value="0"></div>
+      <div class="hint">Enter the number of rooms, rent charged per occupied bed per month, and vacant beds for each sharing type.</div>
+      <h3>Monthly operating expenses</h3>
+      <div class="fields">
+        <div><label for="electricity">Current / electricity bill (₹)</label><input id="electricity" type="number" min="0" value="15000"></div>
+        <div><label for="kaveri">Kaveri / water bill (₹)</label><input id="kaveri" type="number" min="0" value="10000"></div>
+        <div><label for="cook">Cook salary (₹)</label><input id="cook" type="number" min="0" value="25000"></div>
+        <div><label for="cleaner">Cleaner salary (₹)</label><input id="cleaner" type="number" min="0" value="10000"></div>
+        <div><label for="wifi">Wi-Fi charges (₹)</label><input id="wifi" type="number" min="0" value="5000"></div>
+        <div><label for="foodRate">Food cost per bed (₹ / month)</label><input id="foodRate" type="number" min="0" value="1500"><div class="hint">Food bill = beds × this rate (auto-calculated).</div></div>
+        <div><label for="other">Other monthly expenses (₹)</label><input id="other" type="number" min="0" value="0"></div>
+        <div><label for="worstVacant">Worst-case vacant beds</label><input id="worstVacant" type="number" min="0" value="10"><div class="hint">Stress test: assumes the highest-rent beds go vacant first.</div></div>
+      </div>
+      <div class="actions"><button class="secondary" id="reset">Reset defaults</button><button onclick="window.print()">Print / Save report</button></div>
+    </section>
+    <aside class="panel results" aria-live="polite">
+      <h2>Monthly report</h2>
+      <div class="hero"><div class="eyebrow">Profit at full occupancy</div><div class="amount" id="fullProfit">₹0</div><div class="caption">All beds occupied, after listed monthly expenses</div></div>
+      <div class="stats">
+        <div class="stat"><div class="name">Profit with current vacancies</div><div class="val" id="currentProfit">₹0</div></div>
+        <div class="stat"><div class="name">Revenue lost to vacancies</div><div class="val negative" id="vacancyLoss">₹0</div></div>
+        <div class="stat"><div class="name">Total beds</div><div class="val" id="totalBeds">0</div></div>
+        <div class="stat"><div class="name">Occupied beds</div><div class="val" id="occupiedBeds">0</div></div>
+      </div>
+      <div class="breakdown">
+        <h3>Revenue & expense breakdown</h3>
+        <div class="line"><span>Full-capacity monthly revenue</span><strong id="fullRevenue">₹0</strong></div>
+        <div class="line"><span>Revenue at current occupancy</span><strong id="currentRevenue">₹0</strong></div>
+        <div class="line"><span>Monthly property rent</span><strong id="rentOut">₹0</strong></div>
+        <div class="line"><span id="foodLabel">Food (full capacity)</span><strong id="foodOut">₹0</strong></div>
+        <div class="line"><span>Other monthly expenses incl. food (sum of all)</span><strong id="expensesOut">₹0</strong></div>
+        <div class="line total"><span>Monthly expenses total (rent + other)</span><strong id="totalExpenses">₹0</strong></div>
+        <div class="line total"><span>Net at full capacity (revenue − rent − other)</span><strong id="netFull">₹0</strong></div>
+        <div class="line total"><span>Advance / deposit (one-time)</span><strong id="advanceOut">₹0</strong></div>
+      </div>
+      <h3>Profit scenarios</h3>
+      <div class="scenarios">
+        <div class="scenario" id="scFull"><div class="name">Full capacity</div><div class="val" id="scFullVal">₹0</div><div class="meta" id="scFullMeta">All beds occupied</div><span class="tag" id="scFullTag">—</span></div>
+        <div class="scenario" id="scCurrent"><div class="name">Current vacancy</div><div class="val" id="scCurrentVal">₹0</div><div class="meta" id="scCurrentMeta">—</div><span class="tag" id="scCurrentTag">—</span></div>
+        <div class="scenario" id="scWorst"><div class="name">Worst case</div><div class="val" id="scWorstVal">₹0</div><div class="meta" id="scWorstMeta">—</div><span class="tag" id="scWorstTag">—</span></div>
+      </div>
+      <div class="legend"><span><i style="background:#087f5b"></i>Green — healthy profit</span><span><i style="background:#b57a10"></i>Yellow — thin margin</span><span><i style="background:#c2414b"></i>Red — loss</span></div>
+      <p class="note" id="assessment">Enter your numbers to see the estimate.</p>
+      <p class="hint">This is a simple operating estimate, not a purchase valuation. Include maintenance, repairs, staff food, furnishing, loan EMI, taxes, platform fees and one-time setup costs under “Other” if applicable.</p>
+    </aside>
+  </div>
+</div>
+<script>
+const ids = ['rent','advance','rooms2','price2','vac2','rooms3','price3','vac3','rooms4','price4','vac4','electricity','kaveri','cook','cleaner','wifi','foodRate','other','worstVacant'];
+const defaults = {rent:100000,advance:500000,rooms2:3,price2:10000,vac2:1,rooms3:5,price3:8000,vac3:2,rooms4:0,price4:7000,vac4:0,electricity:15000,kaveri:10000,cook:25000,cleaner:10000,wifi:5000,foodRate:1500,other:0,worstVacant:10};
+const num = id => Math.max(0, Number(document.getElementById(id).value) || 0);
+const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n);
+function grade(profit, fullProfit){
+  if(profit < 0) return {cls:'grade-red', tag:'Loss'};
+  if(fullProfit > 0 && profit < fullProfit*0.35) return {cls:'grade-yellow', tag:'Thin margin'};
+  if(profit === 0) return {cls:'grade-yellow', tag:'Break-even'};
+  return {cls:'grade-green', tag:'Profit'};
+}
+function calculate(){
+  let beds=0, vacant=0, fullRevenue=0, lost=0;
+  const bedPrices=[];
+  [2,3,4].forEach(s=>{
+    const rooms=num('rooms'+s), price=num('price'+s), v=Math.min(rooms*s,num('vac'+s));
+    beds+=rooms*s; vacant+=v; fullRevenue+=rooms*s*price; lost+=v*price;
+    for(let i=0;i<rooms*s;i++) bedPrices.push(price);
+  });
+  const baseExpenses=num('rent')+num('electricity')+num('kaveri')+num('cook')+num('cleaner')+num('wifi')+num('other');
+  const food=bedCount=>bedCount*num('foodRate');
+  const worstVacant=Math.min(beds,num('worstVacant'));
+  const fullFood=food(beds), currentFood=food(beds-vacant), worstFood=food(beds-worstVacant);
+  const expenses=baseExpenses+fullFood;
+  const currentRevenue=fullRevenue-lost, fullProfit=fullRevenue-expenses, currentProfit=currentRevenue-baseExpenses-currentFood;
+  const worstLost=bedPrices.sort((a,b)=>b-a).slice(0,worstVacant).reduce((a,b)=>a+b,0);
+  const worstProfit=fullRevenue-worstLost-baseExpenses-worstFood;
+  const set=(id,val)=>document.getElementById(id).textContent=val;
+  set('foodLabel', `Food (${beds} beds × ${money(num('foodRate'))})`);
+  set('foodOut',money(fullFood));
+  set('fullProfit',money(fullProfit)); set('currentProfit',money(currentProfit)); set('vacancyLoss',money(lost));
+  set('totalBeds',beds); set('occupiedBeds',beds-vacant); set('fullRevenue',money(fullRevenue)); set('currentRevenue',money(currentRevenue));
+  set('rentOut',money(num('rent'))); set('expensesOut',money(expenses-num('rent'))); set('totalExpenses',money(expenses));
+  set('netFull',money(fullProfit)); set('advanceOut',money(num('advance')));
+  document.getElementById('fullProfit').className='amount '+(fullProfit>=0?'positive':'negative');
+  document.getElementById('currentProfit').className='val '+(currentProfit>=0?'positive':'negative');
+  const pct=beds ? Math.round((beds-vacant)/beds*100) : 0;
+  const scenarios=[
+    {key:'scFull', profit:fullProfit, meta:`All ${beds} bed(s) occupied · revenue ${money(fullRevenue)} · food ${money(fullFood)}`},
+    {key:'scCurrent', profit:currentProfit, meta:`${vacant} vacant bed(s) · ${pct}% occupancy · food ${money(currentFood)}`},
+    {key:'scWorst', profit:worstProfit, meta:`${worstVacant} vacant bed(s) · lost rent ${money(worstLost)} · food ${money(worstFood)}`}
+  ];
+  scenarios.forEach(s=>{
+    const g=grade(s.profit, fullProfit);
+    document.getElementById(s.key).className='scenario '+g.cls;
+    set(s.key+'Val', money(s.profit));
+    set(s.key+'Meta', s.meta);
+    set(s.key+'Tag', g.tag);
+  });
+  let message = beds===0 ? 'Add your room counts to calculate the report.' : currentProfit>=0 ? `At ${pct}% occupancy, estimated monthly operating profit is ${money(currentProfit)}. Filling the ${vacant} vacant bed(s) could add ${money(fullProfit-currentProfit)} per month (after food).` : `At current occupancy, the PG is estimated to lose ${money(Math.abs(currentProfit))} per month. Full occupancy would change monthly profit to ${money(fullProfit)}.`;
+  if(vacant===0 && beds>0) message=`All beds are occupied. Estimated monthly operating profit is ${money(currentProfit)}.`;
+  if(beds>0) message+=` If ${worstVacant} bed(s) go vacant, the monthly result would be ${money(worstProfit)}.`;
+  set('assessment',message);
+}
+ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));
+document.getElementById('reset').addEventListener('click',()=>{ids.forEach(id=>document.getElementById(id).value=defaults[id]);calculate();});
+calculate();
+</script>
+</body>
+</html>
