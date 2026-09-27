@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PG Profit & Vacancy Calculator</title>
+<title>Kalpana's PG Report</title>
 <style>
   :root { --ink:#172033; --muted:#657087; --line:#e2e7ef; --bg:#f4f7fb; --blue:#2855d9; --green:#087f5b; --amber:#b57a10; --red:#c2414b; }
   * { box-sizing:border-box; }
@@ -59,18 +59,83 @@
   button.secondary { background:#edf1f8; color:#33415c; }
   @media(max-width:800px) { .layout { grid-template-columns:1fr; } .results { position:static; } }
   @media(max-width:480px) { .fields { grid-template-columns:1fr; } .panel { padding:15px; } .room-head,.room-row { grid-template-columns:.8fr 1fr 1fr 1fr; gap:5px; } .room-head { font-size:10px; } .room-row input { font-size:13px; padding:8px 5px; } }
-  @media print { body { background:white; } .wrap { padding:0; } .layout { grid-template-columns:1fr 1fr; } .panel { box-shadow:none; break-inside:avoid; } .actions { display:none; } }
+
+  .contact { margin-top:16px; border:1px solid var(--line); border-radius:12px; padding:14px; background:#f7f9ff; }
+  .contact .headline { font-size:13px; font-weight:800; color:var(--blue); }
+  .contact .services { margin:7px 0 0; padding-left:18px; color:#46516a; font-size:12px; }
+  .contact .services li { margin:2px 0; }
+  .contact .price { margin-top:8px; font-size:13px; font-weight:800; color:var(--green); }
+  .contact .mail { margin-top:6px; font-size:12px; color:#46516a; }
+  .contact .mail strong { color:var(--ink); }
+  .print-tip { margin:9px 0 0; font-size:11px; color:#6b7689; background:#fff8e6; border:1px solid #f0dfae; border-radius:8px; padding:8px 10px; }
+  .print-tip strong { color:var(--ink); }
+  .watermark, .print-footer { display:none; }
+  @page { size:A4 portrait; margin:10mm 10mm 16mm; }
+  @media print {
+    body { background:white; font-size:10px; line-height:1.28; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .wrap { padding:0; max-width:none; }
+    header { margin-bottom:8px; }
+    h1 { font-size:19px; margin-bottom:3px; }
+    .sub { font-size:10px; }
+    h2 { font-size:13px; margin-bottom:8px; }
+    h3 { font-size:9px; margin:10px 0 5px; }
+    .layout { display:block; }
+    .panel { box-shadow:none; border-radius:9px; padding:11px; break-inside:avoid; }
+    .page-inputs { display:none !important; }
+    .results { position:static; }
+    .fields { gap:7px; }
+    label { font-size:9px; margin-bottom:2px; }
+    input { padding:4px 6px; border-radius:5px; font-size:10px; }
+    .hint { font-size:8px; margin-top:2px; }
+    .room-head { font-size:9px; padding-bottom:4px; }
+    .room-row { padding:4px 0; gap:6px; }
+    .room-row input { padding:3px 5px; }
+    .hero { padding:10px; margin-bottom:7px; border-radius:9px; }
+    .hero .eyebrow { font-size:9px; }
+    .hero .amount { font-size:23px; margin:3px 0; }
+    .hero .caption { font-size:9px; }
+    .stats { gap:6px; }
+    .stat { padding:7px; border-radius:8px; }
+    .stat .name { font-size:9px; }
+    .stat .val { font-size:13px; margin-top:2px; }
+    .breakdown { margin-top:9px; }
+    .items { display:grid; grid-template-columns:1fr 1fr; column-gap:16px; }
+    .line { padding:3px 0; font-size:9.5px; }
+    .line.total { padding-top:5px; font-size:11px; margin-top:2px; }
+    .scenarios { gap:7px; margin-top:7px; }
+    .scenario { padding:8px; border-radius:8px; }
+    .scenario .name { font-size:9px; }
+    .scenario .val { font-size:14px; margin:3px 0 2px; }
+    .scenario .meta { font-size:8px; }
+    .scenario .tag { font-size:8px; margin-top:4px; padding:2px 6px; }
+    .legend { font-size:8px; gap:8px; margin-top:6px; }
+    .note { font-size:9px; padding:8px; margin-top:8px; }
+    .actions { display:none; }
+    .print-tip { display:none; }
+    .contact { margin-top:9px; padding:9px; border-radius:8px; break-inside:avoid; }
+    .contact .headline { font-size:11px; }
+    .contact .services { font-size:9px; margin-top:4px; }
+    .contact .price { font-size:11px; margin-top:5px; }
+    .contact .mail { font-size:9px; margin-top:4px; }
+
+    .panel { position:relative; overflow:hidden; }
+    .watermark { display:block; position:absolute; top:50%; left:50%; width:140%; transform:translate(-50%,-50%) rotate(-32deg); text-align:center; font-size:46px; font-weight:800; letter-spacing:2px; color:rgba(40,85,217,.07); white-space:nowrap; pointer-events:none; z-index:0; }
+    .panel > *:not(.watermark) { position:relative; z-index:1; }
+    .print-footer { display:block; margin-top:10px; padding-top:4px; border-top:1px solid var(--line); text-align:center; font-size:8px; line-height:1.4; color:#46516a; break-inside:avoid; }
+    .print-footer strong { color:var(--blue); }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>PG Profit & Vacancy Calculator</h1>
+    <h1>Kalpana's PG Report</h1>
     <p class="sub">Estimate monthly profit at full occupancy versus today’s vacancies before you buy or take over a PG.</p>
   </header>
   <div class="layout">
-    <section class="panel">
-      <h2>Property & room details</h2>
+    <section class="panel page-inputs">
+      <div class="watermark" aria-hidden="true">Kalpana's PG Report</div>
+      <h2>Property &amp; room details</h2>
       <div class="fields">
         <div><label for="rent">Monthly property rent (₹)</label><input id="rent" type="number" min="0" value="100000"></div>
         <div><label for="advance">Refundable advance / deposit (₹)</label><input id="advance" type="number" min="0" value="500000"><div class="hint">Shown separately; not deducted from monthly profit.</div></div>
@@ -93,25 +158,40 @@
         <div><label for="worstVacant">Worst-case vacant beds</label><input id="worstVacant" type="number" min="0" value="10"><div class="hint">Stress test: assumes the highest-rent beds go vacant first.</div></div>
       </div>
       <div class="actions"><button class="secondary" id="reset">Reset defaults</button><button onclick="window.print()">Print / Save report</button></div>
+      <p class="print-tip">In the print window, open <strong>More settings</strong> and untick <strong>Headers and footers</strong> so the file path and date are not printed at the bottom.</p>
+      <div class="print-footer" aria-hidden="true">
+        Google Business setup on Maps &amp; websites of any kind — <strong>starting at just ₹2,999</strong> &nbsp;|&nbsp; Enquiries: <strong>Kalpanareddy500@gmail.com</strong>
+      </div>
     </section>
     <aside class="panel results" aria-live="polite">
+      <div class="watermark" aria-hidden="true">Kalpana's PG Report</div>
       <h2>Monthly report</h2>
       <div class="hero"><div class="eyebrow">Profit at full occupancy</div><div class="amount" id="fullProfit">₹0</div><div class="caption">All beds occupied, after listed monthly expenses</div></div>
       <div class="stats">
         <div class="stat"><div class="name">Profit with current vacancies</div><div class="val" id="currentProfit">₹0</div></div>
-        <div class="stat"><div class="name">Revenue lost to vacancies</div><div class="val negative" id="vacancyLoss">₹0</div></div>
+        <div class="stat"><div class="name">Collection lost to vacancies</div><div class="val negative" id="vacancyLoss">₹0</div></div>
         <div class="stat"><div class="name">Total beds</div><div class="val" id="totalBeds">0</div></div>
         <div class="stat"><div class="name">Occupied beds</div><div class="val" id="occupiedBeds">0</div></div>
       </div>
       <div class="breakdown">
-        <h3>Revenue & expense breakdown</h3>
-        <div class="line"><span>Full-capacity monthly revenue</span><strong id="fullRevenue">₹0</strong></div>
-        <div class="line"><span>Revenue at current occupancy</span><strong id="currentRevenue">₹0</strong></div>
-        <div class="line"><span>Monthly property rent</span><strong id="rentOut">₹0</strong></div>
-        <div class="line"><span id="foodLabel">Food (full capacity)</span><strong id="foodOut">₹0</strong></div>
-        <div class="line"><span>Other monthly expenses incl. food (sum of all)</span><strong id="expensesOut">₹0</strong></div>
-        <div class="line total"><span>Monthly expenses total (rent + other)</span><strong id="totalExpenses">₹0</strong></div>
-        <div class="line total"><span>Net at full capacity (revenue − rent − other)</span><strong id="netFull">₹0</strong></div>
+        <h3>Monthly collection</h3>
+        <div class="items">
+          <div class="line"><span>Full-capacity monthly Collection</span><strong id="fullRevenue">₹0</strong></div>
+          <div class="line"><span>Collection at current occupancy</span><strong id="currentRevenue">₹0</strong></div>
+        </div>
+        <h3>Monthly bills — itemised</h3>
+        <div class="items">
+          <div class="line"><span>Property rent</span><strong id="rentOut">₹0</strong></div>
+          <div class="line"><span>Current / electricity bill</span><strong id="electricityOut">₹0</strong></div>
+          <div class="line"><span>Kaveri / water bill</span><strong id="kaveriOut">₹0</strong></div>
+          <div class="line"><span>Cook salary</span><strong id="cookOut">₹0</strong></div>
+          <div class="line"><span>Cleaner salary</span><strong id="cleanerOut">₹0</strong></div>
+          <div class="line"><span>Wi-Fi charges</span><strong id="wifiOut">₹0</strong></div>
+          <div class="line"><span id="foodLabel">Food (full capacity)</span><strong id="foodOut">₹0</strong></div>
+          <div class="line"><span>Other monthly expenses</span><strong id="otherOut">₹0</strong></div>
+        </div>
+        <div class="line total"><span>Monthly expenses total (all bills above)</span><strong id="totalExpenses">₹0</strong></div>
+        <div class="line total"><span>Net at full capacity (Collection − all bills)</span><strong id="netFull">₹0</strong></div>
         <div class="line total"><span>Advance / deposit (one-time)</span><strong id="advanceOut">₹0</strong></div>
       </div>
       <h3>Profit scenarios</h3>
@@ -123,6 +203,18 @@
       <div class="legend"><span><i style="background:#087f5b"></i>Green — healthy profit</span><span><i style="background:#b57a10"></i>Yellow — thin margin</span><span><i style="background:#c2414b"></i>Red — loss</span></div>
       <p class="note" id="assessment">Enter your numbers to see the estimate.</p>
       <p class="hint">This is a simple operating estimate, not a purchase valuation. Include maintenance, repairs, staff food, furnishing, loan EMI, taxes, platform fees and one-time setup costs under “Other” if applicable.</p>
+      <div class="contact">
+        <div class="headline">Need your business online? We set it up for you.</div>
+        <ul class="services">
+          <li>Google Business Profile setup &amp; listing on Google Maps</li>
+          <li>Websites of any kind — business, portfolio, booking or e-commerce</li>
+        </ul>
+        <div class="price">Starting at just ₹2,999</div>
+        <div class="mail">For enquiries, write to <strong>Kalpanareddy500@gmail.com</strong></div>
+      </div>
+      <div class="print-footer" aria-hidden="true">
+        Google Business setup on Maps &amp; websites of any kind — <strong>starting at just ₹2,999</strong> &nbsp;|&nbsp; Enquiries: <strong>Kalpanareddy500@gmail.com</strong>
+      </div>
     </aside>
   </div>
 </div>
@@ -158,13 +250,15 @@ function calculate(){
   set('foodOut',money(fullFood));
   set('fullProfit',money(fullProfit)); set('currentProfit',money(currentProfit)); set('vacancyLoss',money(lost));
   set('totalBeds',beds); set('occupiedBeds',beds-vacant); set('fullRevenue',money(fullRevenue)); set('currentRevenue',money(currentRevenue));
-  set('rentOut',money(num('rent'))); set('expensesOut',money(expenses-num('rent'))); set('totalExpenses',money(expenses));
+  set('rentOut',money(num('rent')));
+  ['electricity','kaveri','cook','cleaner','wifi','other'].forEach(k=>set(k+'Out',money(num(k))));
+  set('totalExpenses',money(expenses));
   set('netFull',money(fullProfit)); set('advanceOut',money(num('advance')));
   document.getElementById('fullProfit').className='amount '+(fullProfit>=0?'positive':'negative');
   document.getElementById('currentProfit').className='val '+(currentProfit>=0?'positive':'negative');
   const pct=beds ? Math.round((beds-vacant)/beds*100) : 0;
   const scenarios=[
-    {key:'scFull', profit:fullProfit, meta:`All ${beds} bed(s) occupied · revenue ${money(fullRevenue)} · food ${money(fullFood)}`},
+    {key:'scFull', profit:fullProfit, meta:`All ${beds} bed(s) occupied · collection ${money(fullRevenue)} · food ${money(fullFood)}`},
     {key:'scCurrent', profit:currentProfit, meta:`${vacant} vacant bed(s) · ${pct}% occupancy · food ${money(currentFood)}`},
     {key:'scWorst', profit:worstProfit, meta:`${worstVacant} vacant bed(s) · lost rent ${money(worstLost)} · food ${money(worstFood)}`}
   ];
