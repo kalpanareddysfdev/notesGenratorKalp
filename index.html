@@ -463,8 +463,7 @@
       <div class="filter-tabs">
         <button class="filter-btn active" data-category="all">All Items</button>
         <button class="filter-btn" data-category="apps">Apps & Tools</button>
-        <button class="filter-btn" data-category="notes">Study Notes</button>
-        <button class="filter-btn" data-category="pdfs">PDFs</button>
+        <button class="filter-btn" data-category="docs">PDFs & Docs</button>
       </div>
     </div>
 
@@ -489,44 +488,26 @@
         </div>
       </a>
 
-      <!-- GCP Study Note -->
-      <a class="card" href="gcp_study_note.html" data-category="notes" data-tags="gcp google cloud certification architecture study note">
-        <div>
-          <div class="card-header">
-            <div class="card-icon">☁️</div>
-            <span class="tag tag-note">Study Note</span>
-          </div>
-          <div class="card-body">
-            <h3>GCP Fundamentals Study Note</h3>
-            <p>Comprehensive interactive guide covering Google Cloud Platform foundational architecture, storage, and computing.</p>
-          </div>
-        </div>
-        <div class="card-footer">
-          <span class="card-format">Interactive Note</span>
-          <span class="card-link">Open Note &rarr;</span>
-        </div>
-      </a>
-
-      <!-- PG Buying Report -->
-      <a class="card" href="Kalpana%27s%20PG%20Buying%20Report.html" data-category="notes" data-tags="pg buying real estate cost report property comparison">
+      <!-- PG Report Generator -->
+      <a class="card" href="Kalpana%27s%20PG%20Buying%20Report.html" data-category="apps" data-tags="pg report generator calculator buying real estate cost property comparison tool app">
         <div>
           <div class="card-header">
             <div class="card-icon">📊</div>
-            <span class="tag tag-report">Report</span>
+            <span class="tag tag-app">Interactive Tool</span>
           </div>
           <div class="card-body">
-            <h3>PG Buying Analysis Report</h3>
-            <p>Detailed analysis, financial breakdowns, and accommodation comparison metrics for purchasing decisions.</p>
+            <h3>PG Report Generator</h3>
+            <p>Interactive calculator and report generator for PG property investment analysis, room occupancy, cash flows, and ROI scenarios.</p>
           </div>
         </div>
         <div class="card-footer">
-          <span class="card-format">Analytics Report</span>
-          <span class="card-link">View Report &rarr;</span>
+          <span class="card-format">HTML / Calculator Tool</span>
+          <span class="card-link">Launch Tool &rarr;</span>
         </div>
       </a>
 
       <!-- Claude Tutorial PDF -->
-      <a class="card" href="Claude%20tutorial.pdf" target="_blank" data-category="pdfs" data-tags="claude anthropic ai prompt engineering tutorial guide pdf">
+      <a class="card" href="Claude%20tutorial.pdf" target="_blank" data-category="docs" data-tags="claude anthropic ai prompt engineering tutorial guide pdf doc">
         <div>
           <div class="card-header">
             <div class="card-icon">🤖</div>
@@ -544,7 +525,7 @@
       </a>
 
       <!-- GCP Fundamentals PDF -->
-      <a class="card" href="GCP%20Fundamentals%20Study%20Note.pdf" target="_blank" data-category="pdfs" data-tags="gcp google cloud pdf guide fundamentals study note">
+      <a class="card" href="GCP%20Fundamentals%20Study%20Note.pdf" target="_blank" data-category="docs" data-tags="gcp google cloud pdf guide fundamentals study note doc">
         <div>
           <div class="card-header">
             <div class="card-icon">📄</div>
@@ -562,7 +543,7 @@
       </a>
 
       <!-- Study Note Generator Guide PDF -->
-      <a class="card" href="Study%20Note%20Generator%20-%20Create%20Beautiful%20Notes%20for%20Any%20Topic.pdf" target="_blank" data-category="pdfs" data-tags="guide manual study note generator pdf documentation">
+      <a class="card" href="Study%20Note%20Generator%20-%20Create%20Beautiful%20Notes%20for%20Any%20Topic.pdf" target="_blank" data-category="docs" data-tags="guide manual study note generator pdf documentation doc">
         <div>
           <div class="card-header">
             <div class="card-icon">📘</div>
@@ -620,25 +601,149 @@
       setTheme(current === 'light' ? 'dark' : 'light');
     });
 
+    // Known custom details for primary apps
+    const KNOWN_METADATA = {
+      'study_note_generator.html': {
+        title: "Study Note Generator",
+        desc: "Generate beautifully formatted, structured, and customizable study notes for any topic in real-time.",
+        icon: "⚡",
+        badge: "Interactive Tool",
+        action: "Launch App &rarr;"
+      },
+      "Kalpana's PG Buying Report.html": {
+        title: "PG Report Generator",
+        desc: "Interactive calculator and report generator for PG property investment analysis, room occupancy, cash flows, and ROI scenarios.",
+        icon: "📊",
+        badge: "Interactive Tool",
+        action: "Launch Tool &rarr;"
+      }
+    };
+
+    // Helper to format file sizes
+    function formatBytes(bytes) {
+      if (!bytes || bytes === 0) return '';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    // Helper to format filename into a clean title
+    function formatTitle(filename) {
+      const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
+      return decodeURIComponent(nameWithoutExt).replace(/[-_]/g, ' ');
+    }
+
+    // Dynamic Repository Loader (auto-detects any newly pushed file!)
+    async function loadRepoFiles() {
+      try {
+        const response = await fetch('https://api.github.com/repos/kalpanareddysfdev/notesGenratorKalp/contents?ref=main', {
+          headers: { 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (!response.ok) return; // Fallback to existing static cards
+
+        const files = await response.json();
+        if (!Array.isArray(files)) return;
+
+        const grid = document.getElementById('itemsGrid');
+        const emptyEl = document.getElementById('emptyState');
+
+        // Filter out system files, hidden files, and the hub index
+        const validFiles = files.filter(f => {
+          if (f.type !== 'file') return false;
+          const name = f.name.toLowerCase();
+          if (name.startsWith('.') || name === 'cname' || name === 'index.html') return false;
+          return name.endsWith('.html') || name.endsWith('.pdf') || name.endsWith('.doc') || name.endsWith('.docx') || name.endsWith('.md');
+        });
+
+        if (validFiles.length === 0) return;
+
+        // Clear existing static cards and re-render dynamically
+        grid.querySelectorAll('.card').forEach(c => c.remove());
+
+        validFiles.forEach(file => {
+          const name = file.name;
+          const lowerName = name.toLowerCase();
+          const isHtml = lowerName.endsWith('.html');
+          const isPdf = lowerName.endsWith('.pdf');
+          const isMd = lowerName.endsWith('.md');
+          const isDoc = lowerName.endsWith('.doc') || lowerName.endsWith('.docx');
+
+          const category = isHtml ? 'apps' : 'docs';
+          const ext = name.split('.').pop().toUpperCase();
+          const sizeStr = formatBytes(file.size);
+
+          const meta = KNOWN_METADATA[name] || {};
+          const title = meta.title || formatTitle(name);
+          const icon = meta.icon || (isHtml ? '⚡' : isPdf ? '📄' : isMd ? '📘' : '📝');
+          const tagClass = isHtml ? 'tag-app' : 'tag-pdf';
+          const badge = meta.badge || (isHtml ? 'Interactive Tool' : isPdf ? 'PDF Document' : 'Document');
+          const actionText = meta.action || (isHtml ? 'Launch App &rarr;' : 'Open Document &rarr;');
+          const desc = meta.desc || `Reference resource: ${title} (${ext} document).`;
+
+          const card = document.createElement('a');
+          card.className = 'card';
+          card.href = encodeURI(name);
+          if (!isHtml) card.target = '_blank';
+          card.setAttribute('data-category', category);
+          card.setAttribute('data-tags', `${name} ${title} ${category} ${ext} tool doc guide`.toLowerCase());
+
+          card.innerHTML = `
+            <div>
+              <div class="card-header">
+                <div class="card-icon">${icon}</div>
+                <span class="tag ${tagClass}">${badge}</span>
+              </div>
+              <div class="card-body">
+                <h3>${title}</h3>
+                <p>${desc}</p>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="card-format">${sizeStr ? `${sizeStr} &bull; ` : ''}${ext}</span>
+              <span class="card-link">${actionText}</span>
+            </div>
+          `;
+
+          grid.insertBefore(card, emptyEl);
+        });
+
+        // Re-run filter after dynamic loading
+        filterCards();
+      } catch (err) {
+        console.warn('Could not fetch latest repo contents dynamically, using static fallback:', err);
+      }
+    }
+
     // Search and Filter Functionality
     const searchInput = document.getElementById('searchInput');
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.grid .card');
     const emptyState = document.getElementById('emptyState');
-
     let activeCategory = 'all';
 
     function filterCards() {
+      const cards = document.querySelectorAll('.grid .card');
       const query = searchInput.value.toLowerCase().trim();
       let visibleCount = 0;
 
       cards.forEach(card => {
-        const category = card.getAttribute('data-category');
-        const tags = (card.getAttribute('data-tags') || '').toLowerCase();
-        const title = card.querySelector('h3').textContent.toLowerCase();
-        const desc = card.querySelector('p').textContent.toLowerCase();
+        const href = (card.getAttribute('href') || '').toLowerCase();
+        let itemType = 'docs';
+        if (href.endsWith('.html') || href.includes('.html')) {
+          itemType = 'apps';
+        } else if (href.endsWith('.pdf') || href.endsWith('.doc') || href.endsWith('.docx') || href.endsWith('.md')) {
+          itemType = 'docs';
+        } else {
+          itemType = card.getAttribute('data-category') || 'apps';
+        }
 
-        const matchesCat = activeCategory === 'all' || category === activeCategory;
+        const tags = (card.getAttribute('data-tags') || '').toLowerCase();
+        const titleEl = card.querySelector('h3');
+        const descEl = card.querySelector('p');
+        const title = titleEl ? titleEl.textContent.toLowerCase() : '';
+        const desc = descEl ? descEl.textContent.toLowerCase() : '';
+
+        const matchesCat = activeCategory === 'all' || itemType === activeCategory;
         const matchesQuery = query === '' ||
           title.includes(query) ||
           desc.includes(query) ||
@@ -665,6 +770,9 @@
         filterCards();
       });
     });
+
+    // Auto-fetch repo contents when page loads
+    loadRepoFiles();
   </script>
 </body>
 </html>

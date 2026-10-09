@@ -452,6 +452,58 @@
             color: #1e293b;
         }
 
+        /* Constant Watermark (learn.pgmaaya.com) */
+        .watermark-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .watermark-line {
+            font-size: 48px;
+            font-weight: 800;
+            color: rgba(15, 23, 42, 0.05);
+            letter-spacing: 4px;
+            transform: rotate(-30deg);
+            white-space: nowrap;
+            user-select: none;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* Document Footer */
+        .doc-footer {
+            margin-top: 48px;
+            padding-top: 18px;
+            border-top: 1.5px dashed #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            break-inside: avoid;
+        }
+
+        .doc-footer a {
+            color: var(--theme-color, #4f46e5);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .doc-footer a:hover {
+            text-decoration: underline;
+        }
+
         /* Headings */
         .doc-header-banner {
             text-align: center;
@@ -744,9 +796,24 @@
                 padding-left: 76px !important;
             }
 
-            .doc-h1, .doc-h2, .doc-table-wrap, .doc-image-figure, .doc-callout, .doc-code-block {
+            .doc-h1, .doc-h2, .doc-table-wrap, .doc-image-figure, .doc-callout, .doc-code-block, .doc-footer {
                 break-inside: avoid !important;
                 page-break-inside: avoid !important;
+            }
+
+            .watermark-container {
+                display: flex !important;
+                position: absolute !important;
+                inset: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .watermark-line {
+                display: block !important;
+                color: rgba(0, 0, 0, 0.055) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             .doc-page.style-lined::before {
@@ -1136,6 +1203,17 @@ Tip: You can press Ctrl+V / Cmd+V to paste any screenshot or image directly!"></
             const page = document.createElement('div');
             page.className = `doc-page style-${currentPaperStyle}`;
 
+            // Permanent Watermark (learn.pgmaaya.com)
+            const wmContainer = document.createElement('div');
+            wmContainer.className = 'watermark-container';
+            for (let k = 0; k < 6; k++) {
+                const wmLine = document.createElement('div');
+                wmLine.className = 'watermark-line';
+                wmLine.textContent = 'learn.pgmaaya.com';
+                wmContainer.appendChild(wmLine);
+            }
+            page.appendChild(wmContainer);
+
             const docContent = document.createElement('div');
             docContent.className = 'doc-content';
             docContent.style.fontFamily = currentFont;
@@ -1333,6 +1411,15 @@ Tip: You can press Ctrl+V / Cmd+V to paste any screenshot or image directly!"></
             }
 
             closeList();
+
+            // Document Footer
+            const docFooter = document.createElement('footer');
+            docFooter.className = 'doc-footer';
+            docFooter.innerHTML = `
+                <span>Generate study notes for free on <a href="https://learn.pgmaaya.com" target="_blank">learn.pgmaaya.com</a></span>
+                <span style="font-weight: 600; color: #475569;">Kalpana's Learning Hub</span>
+            `;
+            docContent.appendChild(docFooter);
 
             page.appendChild(docContent);
             preview.appendChild(page);
