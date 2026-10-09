@@ -3,127 +3,668 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Kalpana's study tools, reports, and PDF notes.">
-  <title>Kalpana's Learning Hub</title>
+  <meta name="description" content="Kalpana's Learning Hub - Interactive tools, study notes, and technical guides.">
+  <title>Kalpana's Learning Hub | learn.pgmaaya.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: light;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #172033;
-      background: #f4f7fb;
+      --bg: #0b0f19;
+      --surface: #111827;
+      --surface-hover: #172033;
+      --surface-border: #1f293d;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.2);
+      --accent: #8b5cf6;
+      --card-gradient: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.005) 100%);
+      --tag-app: #10b981;
+      --tag-note: #3b82f6;
+      --tag-pdf: #f59e0b;
+      --tag-report: #ec4899;
     }
 
-    * { box-sizing: border-box; }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-hover: #f1f5f9;
+      --surface-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --primary: #2563eb;
+      --primary-glow: rgba(37, 99, 235, 0.15);
+      --accent: #7c3aed;
+      --card-gradient: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    }
 
-    body { margin: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
 
-    main {
-      width: min(960px, 100%);
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient background blur */
+    .ambient-glow {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(139, 92, 246, 0.06) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: min(1120px, 100%);
       margin: 0 auto;
-      padding: 48px 20px 64px;
+      padding: 32px 24px 80px;
+      position: relative;
+      z-index: 1;
     }
 
-    header { margin-bottom: 36px; }
+    /* Navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 100px;
+      margin-bottom: 50px;
+      backdrop-filter: blur(12px);
+    }
 
-    h1 {
-      margin: 0 0 8px;
-      font-size: clamp(2rem, 6vw, 3rem);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 50px;
+      border: 1px solid var(--surface-border);
+    }
+
+    .back-btn:hover {
+      color: var(--text-main);
+      border-color: var(--text-dim);
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid var(--surface-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .theme-toggle:hover {
+      color: var(--text-main);
+      border-color: var(--text-dim);
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 48px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .hero-badge span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 8px var(--primary);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 3.4rem);
+      font-weight: 800;
       letter-spacing: -0.04em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text-main) 60%, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    header p, .description { color: #657087; }
-    header p { margin: 0; font-size: 1.05rem; }
-    section + section { margin-top: 36px; }
-    h2 { margin: 0 0 14px; font-size: 1.35rem; }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      line-height: 1.6;
+    }
 
+    /* Controls (Search & Filter) */
+    .controls-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-bottom: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.2);
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 11px 16px 11px 42px;
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .filter-btn:hover {
+      color: var(--text-main);
+      background: var(--surface-hover);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 10px var(--primary-glow);
+    }
+
+    /* Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
     }
 
+    /* Card */
     .card {
-      display: block;
-      padding: 20px;
-      border: 1px solid #e2e7ef;
-      border-radius: 14px;
-      background: #fff;
-      color: inherit;
+      background: var(--card-gradient);
+      background-color: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 18px;
+      padding: 24px;
       text-decoration: none;
-      transition: border-color 150ms ease, transform 150ms ease;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .card:hover, .card:focus-visible {
-      border-color: #2855d9;
-      transform: translateY(-2px);
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.35);
     }
 
-    .card:focus-visible { outline: 3px solid #2855d955; }
-    .card h3 { margin: 0 0 7px; font-size: 1.05rem; }
-    .card p { margin: 0; color: #657087; line-height: 1.5; }
-    .card .action { display: inline-block; margin-top: 14px; color: #2855d9; font-weight: 650; }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
 
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      background: var(--surface-hover);
+      border: 1px solid var(--surface-border);
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .tag-app { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .tag-note { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .tag-pdf { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .tag-report { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+
+    .card-body h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.35;
+      color: var(--text-main);
+    }
+
+    .card-body p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--surface-border);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .card-format {
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card:hover .card-link {
+      transform: translateX(4px);
+      transition: transform 0.2s ease;
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .empty-state h4 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    /* Footer */
     footer {
-      margin-top: 40px;
-      color: #657087;
-      font-size: 0.9rem;
+      margin-top: 80px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.88rem;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 20px 16px 60px; }
+      .navbar { margin-bottom: 36px; padding: 10px 16px; }
+      .controls-wrapper { flex-direction: column; align-items: stretch; }
+      .filter-tabs { overflow-x: auto; padding-bottom: 4px; }
+      .hero h1 { font-size: 2rem; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <h1>Kalpana's Learning Hub</h1>
-      <p>Study tools, reports, and notes in one place.</p>
+
+  <div class="ambient-glow"></div>
+
+  <div class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="https://pgmaaya.com" class="brand">
+        <div class="brand-icon">📚</div>
+        <span>Kalpana's Hub</span>
+      </a>
+      <div class="nav-actions">
+        <a href="https://pgmaaya.com" class="back-btn" title="Back to PGMaaya main site">
+          ← pgmaaya.com
+        </a>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+          <span id="themeIcon">☀️</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-badge">
+        <span></span> Knowledge & Tools Repository
+      </div>
+      <h1>Explore Knowledge, Tools & Notes</h1>
+      <p>Interactive web generators, technical cloud architecture notes, and comprehensive reference PDFs.</p>
     </header>
 
-    <section aria-labelledby="apps-heading">
-      <h2 id="apps-heading">Apps and reports</h2>
-      <div class="grid">
-        <a class="card" href="study_note_generator.html">
-          <h3>Study Note Generator</h3>
-          <p>Create and format study notes for a topic.</p>
-          <span class="action">Open app &rarr;</span>
-        </a>
-        <a class="card" href="gcp_study_note.html">
-          <h3>GCP Fundamentals Study Note</h3>
-          <p>Browse the Google Cloud fundamentals study note.</p>
-          <span class="action">Open study note &rarr;</span>
-        </a>
-        <a class="card" href="Kalpana%27s%20PG%20Buying%20Report.html">
-          <h3>PG Buying Report</h3>
-          <p>Review the report and compare the accommodation costs.</p>
-          <span class="action">Open report &rarr;</span>
-        </a>
+    <!-- Search & Filter Controls -->
+    <div class="controls-wrapper">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search notes, tools, or guides...">
       </div>
-    </section>
-
-    <section aria-labelledby="pdfs-heading">
-      <h2 id="pdfs-heading">PDF files</h2>
-      <div class="grid">
-        <a class="card" href="Claude%20tutorial.pdf">
-          <h3>Claude Tutorial</h3>
-          <p>PDF document</p>
-          <span class="action">View PDF &rarr;</span>
-        </a>
-        <a class="card" href="GCP%20Fundamentals%20Study%20Note.pdf">
-          <h3>GCP Fundamentals Study Note</h3>
-          <p>PDF document</p>
-          <span class="action">View PDF &rarr;</span>
-        </a>
-        <a class="card" href="Study%20Note%20Generator%20-%20Create%20Beautiful%20Notes%20for%20Any%20Topic.pdf">
-          <h3>Study Note Generator Guide</h3>
-          <p>PDF document</p>
-          <span class="action">View PDF &rarr;</span>
-        </a>
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-category="all">All Items</button>
+        <button class="filter-btn" data-category="apps">Apps & Tools</button>
+        <button class="filter-btn" data-category="notes">Study Notes</button>
+        <button class="filter-btn" data-category="pdfs">PDFs</button>
       </div>
-    </section>
+    </div>
 
-    <footer>Each app and document opens on its own page.</footer>
-  </main>
+    <!-- Items Grid -->
+    <main class="grid" id="itemsGrid">
+
+      <!-- Study Note Generator -->
+      <a class="card" href="study_note_generator.html" data-category="apps" data-tags="app generator tool notes study ai">
+        <div>
+          <div class="card-header">
+            <div class="card-icon">⚡</div>
+            <span class="tag tag-app">Interactive Tool</span>
+          </div>
+          <div class="card-body">
+            <h3>Study Note Generator</h3>
+            <p>Generate beautifully formatted, structured, and customizable study notes for any topic in real-time.</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-format">HTML / Web App</span>
+          <span class="card-link">Launch App &rarr;</span>
+        </div>
+      </a>
+
+      <!-- GCP Study Note -->
+      <a class="card" href="gcp_study_note.html" data-category="notes" data-tags="gcp google cloud certification architecture study note">
+        <div>
+          <div class="card-header">
+            <div class="card-icon">☁️</div>
+            <span class="tag tag-note">Study Note</span>
+          </div>
+          <div class="card-body">
+            <h3>GCP Fundamentals Study Note</h3>
+            <p>Comprehensive interactive guide covering Google Cloud Platform foundational architecture, storage, and computing.</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-format">Interactive Note</span>
+          <span class="card-link">Open Note &rarr;</span>
+        </div>
+      </a>
+
+      <!-- PG Buying Report -->
+      <a class="card" href="Kalpana%27s%20PG%20Buying%20Report.html" data-category="notes" data-tags="pg buying real estate cost report property comparison">
+        <div>
+          <div class="card-header">
+            <div class="card-icon">📊</div>
+            <span class="tag tag-report">Report</span>
+          </div>
+          <div class="card-body">
+            <h3>PG Buying Analysis Report</h3>
+            <p>Detailed analysis, financial breakdowns, and accommodation comparison metrics for purchasing decisions.</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-format">Analytics Report</span>
+          <span class="card-link">View Report &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Claude Tutorial PDF -->
+      <a class="card" href="Claude%20tutorial.pdf" target="_blank" data-category="pdfs" data-tags="claude anthropic ai prompt engineering tutorial guide pdf">
+        <div>
+          <div class="card-header">
+            <div class="card-icon">🤖</div>
+            <span class="tag tag-pdf">PDF Document</span>
+          </div>
+          <div class="card-body">
+            <h3>Claude AI Tutorial</h3>
+            <p>Step-by-step masterclass tutorial covering Anthropic's Claude prompting, workflows, and techniques.</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-format">738 KB &bull; PDF</span>
+          <span class="card-link">Read PDF &rarr;</span>
+        </div>
+      </a>
+
+      <!-- GCP Fundamentals PDF -->
+      <a class="card" href="GCP%20Fundamentals%20Study%20Note.pdf" target="_blank" data-category="pdfs" data-tags="gcp google cloud pdf guide fundamentals study note">
+        <div>
+          <div class="card-header">
+            <div class="card-icon">📄</div>
+            <span class="tag tag-pdf">PDF Document</span>
+          </div>
+          <div class="card-body">
+            <h3>GCP Fundamentals Complete PDF</h3>
+            <p>Printable, high-res PDF version of the complete Google Cloud Platform core fundamentals guide.</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-format">1.9 MB &bull; PDF</span>
+          <span class="card-link">Download PDF &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Study Note Generator Guide PDF -->
+      <a class="card" href="Study%20Note%20Generator%20-%20Create%20Beautiful%20Notes%20for%20Any%20Topic.pdf" target="_blank" data-category="pdfs" data-tags="guide manual study note generator pdf documentation">
+        <div>
+          <div class="card-header">
+            <div class="card-icon">📘</div>
+            <span class="tag tag-pdf">PDF Document</span>
+          </div>
+          <div class="card-body">
+            <h3>Study Note Generator Guide</h3>
+            <p>Comprehensive guide & manual on how to structure note generation and optimize topic learning retention.</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-format">736 KB &bull; PDF</span>
+          <span class="card-link">Read PDF &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Empty Search State -->
+      <div class="empty-state" id="emptyState">
+        <h4>No matching resources found</h4>
+        <p>Try searching for different keywords or clear your filter.</p>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>Curated with ❤️ by Kalpana &bull; Hosted on <a href="https://learn.pgmaaya.com">learn.pgmaaya.com</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // Theme Switcher
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const root = document.documentElement;
+
+    function setTheme(theme) {
+      if (theme === 'light') {
+        root.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('hub-theme', 'light');
+      } else {
+        root.removeAttribute('data-theme');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('hub-theme', 'dark');
+      }
+    }
+
+    const savedTheme = localStorage.getItem('hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    });
+
+    // Search and Filter Functionality
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.grid .card');
+    const emptyState = document.getElementById('emptyState');
+
+    let activeCategory = 'all';
+
+    function filterCards() {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const tags = (card.getAttribute('data-tags') || '').toLowerCase();
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+
+        const matchesCat = activeCategory === 'all' || category === activeCategory;
+        const matchesQuery = query === '' ||
+          title.includes(query) ||
+          desc.includes(query) ||
+          tags.includes(query);
+
+        if (matchesCat && matchesQuery) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('input', filterCards);
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.getAttribute('data-category');
+        filterCards();
+      });
+    });
+  </script>
 </body>
 </html>
