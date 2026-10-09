@@ -3,9 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalpana's Study Note Generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Indie+Flower&family=Pacifico&family=Permanent+Marker&family=Satisfy&family=Comfortaa:wght@400;700&family=Fredoka:wght@400;700&family=Patrick+Hand&family=Quicksand:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Kalpana's Study Note & Doc Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Indie+Flower&family=Pacifico&family=Permanent+Marker&family=Satisfy&family=Comfortaa:wght@400;700&family=Fredoka:wght@400;600&family=Patrick+Hand&family=Quicksand:wght@400;600;700&family=Poppins:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: rgba(79, 70, 229, 0.1);
+            --bg-page: #f1f5f9;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,149 +26,126 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 24px;
+            color: var(--text-main);
+        }
+
+        .app-header {
+            max-width: 1560px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            padding: 16px 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .app-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1560px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: 560px 1fr;
+            gap: 24px;
+            align-items: start;
         }
 
         .panel {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+            border: 1px solid var(--border-color);
         }
 
         .panel h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 24px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
+            color: #1e293b;
+            margin-bottom: 18px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         label {
             display: block;
-            color: #2c3e50;
+            color: #334155;
             font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 6px;
+            font-size: 13px;
         }
 
         input[type="text"],
         textarea,
         select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
+            padding: 10px 12px;
+            border: 1.5px solid #cbd5e1;
             border-radius: 8px;
             font-size: 14px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            transition: border-color 0.3s;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #fff;
         }
 
         input[type="text"]:focus,
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
 
         textarea {
             resize: vertical;
-            min-height: 300px;
-            font-family: 'Courier New', monospace;
+            min-height: 380px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
             font-size: 13px;
+            line-height: 1.5;
+            tab-size: 2;
         }
 
-        .format-hint {
-            background: rgba(102, 126, 234, 0.1);
-            border-left: 4px solid #667eea;
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 10px;
-            font-size: 13px;
-            color: #2c3e50;
-            line-height: 1.6;
-        }
-
-        .format-hint code {
-            background: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        button {
-            flex: 1;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        .btn-generate {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-generate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-download {
-            background: #4caf50;
-            color: white;
-        }
-
-        .btn-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
-        }
-
-        .btn-download:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
+        /* Color selector */
         .color-selector {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-top: 8px;
         }
 
         .color-option {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             border-radius: 8px;
             cursor: pointer;
             border: 3px solid transparent;
-            transition: transform 0.2s;
+            transition: transform 0.15s, border-color 0.15s;
         }
 
         .color-option:hover {
@@ -163,25 +153,26 @@
         }
 
         .color-option.selected {
-            border-color: #2c3e50;
+            border-color: #0f172a;
             transform: scale(1.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
         }
 
+        /* Font selector */
         .font-selector {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-top: 8px;
+            gap: 6px;
         }
 
         .font-option {
-            padding: 6px 10px;
-            border: 2px solid #e0e0e0;
+            padding: 6px 4px;
+            border: 1.5px solid #e2e8f0;
             border-radius: 6px;
             cursor: pointer;
-            background: white;
-            transition: all 0.2s;
-            font-size: 12px;
+            background: #f8fafc;
+            transition: all 0.15s;
+            font-size: 11px;
             font-weight: 600;
             text-align: center;
             white-space: nowrap;
@@ -190,76 +181,254 @@
         }
 
         .font-option:hover {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+            background: #ede9fe;
         }
 
         .font-option.selected {
-            border-color: #667eea;
-            background: #667eea;
+            border-color: var(--primary);
+            background: var(--primary);
             color: white;
         }
 
-        .font-caveat {
-            font-family: 'Caveat', cursive;
+        /* Paper Style Selector */
+        .style-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
         }
 
-        .font-indie {
-            font-family: 'Indie Flower', cursive;
+        .style-btn {
+            padding: 8px 10px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            background: #f8fafc;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s;
         }
 
-        .font-pacifico {
-            font-family: 'Pacifico', cursive;
+        .style-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
         }
 
-        .font-permanent {
-            font-family: 'Permanent Marker', cursive;
+        /* Toolbar / Image upload bar */
+        .editor-toolbar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+            background: #f8fafc;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
         }
 
-        .font-satisfy {
-            font-family: 'Satisfy', cursive;
+        .tool-btn {
+            padding: 6px 10px;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.15s;
+            color: #334155;
         }
 
-        .font-comfortaa {
-            font-family: 'Comfortaa', cursive;
+        .tool-btn:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #0f172a;
         }
 
-        .font-patrick {
-            font-family: 'Patrick Hand', cursive;
+        .tool-btn.primary {
+            background: #ede9fe;
+            border-color: #c4b5fd;
+            color: #5b21b6;
         }
 
-        .font-quicksand {
-            font-family: 'Quicksand', sans-serif;
+        .tool-btn.primary:hover {
+            background: #ddd6fe;
         }
 
-        .font-fredoka {
-            font-family: 'Fredoka', sans-serif;
+        /* Hover Tooltip for Allowed Files */
+        .upload-help-badge {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s;
         }
 
-        .font-poppins {
-            font-family: 'Poppins', sans-serif;
+        .upload-help-badge:hover,
+        .upload-help-badge:focus {
+            color: var(--primary);
+            background: var(--primary-light);
+            border-color: #c7d2fe;
         }
 
-        /* Preview Styles */
-        #preview {
-            max-height: 800px;
+        .upload-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            width: 280px;
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            z-index: 100;
+            transition: opacity 0.2s, visibility 0.2s;
+            pointer-events: none;
+        }
+
+        .upload-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 20px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent transparent #0f172a transparent;
+        }
+
+        .upload-help-badge:hover .upload-tooltip,
+        .upload-help-badge:focus .upload-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-download {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-download:disabled {
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .format-hint {
+            background: #f8fafc;
+            border-left: 3px solid var(--primary);
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-size: 11.5px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .format-hint code {
+            background: #e2e8f0;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #0f172a;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+        }
+
+        /* Preview Panel */
+        #preview-wrapper {
+            max-height: 86vh;
             overflow-y: auto;
             border-radius: 12px;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+            background: #e2e8f0;
+            padding: 24px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
         }
 
-        .note-page {
-            width: 100%;
+        .doc-page {
+            max-width: 860px;
+            margin: 0 auto 30px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            position: relative;
+            padding: 56px 52px 56px 76px;
+            min-height: 1080px;
+            box-sizing: border-box;
+            transition: background 0.2s;
+            overflow: hidden;
+        }
+
+        /* Paper Styles */
+        .doc-page.style-clean {
+            background: #ffffff;
+            padding-left: 56px;
+            padding-right: 56px;
+        }
+
+        .doc-page.style-lined {
             background: linear-gradient(to bottom, #fdfbf7 0%, #fffcf9 100%);
             position: relative;
-            font-size: 18px;
-            line-height: 1.6;
-            font-family: 'Caveat', cursive;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
+            padding-left: 76px;
         }
 
-        .note-page::before {
+        .doc-page.style-lined::before {
             content: '';
             position: absolute;
             top: 0;
@@ -267,129 +436,333 @@
             right: 0;
             bottom: 0;
             background-image:
-                linear-gradient(to right, #ff6b6b 0%, #ff6b6b 3%, transparent 3%),
-                repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, #e8d4e8 28px, #e8d4e8 29px);
+                linear-gradient(to right, #f43f5e 0px, #f43f5e 2px, transparent 2px),
+                repeating-linear-gradient(to bottom, transparent 0px, transparent 31px, #e2e8f0 31px, #e2e8f0 32px);
+            background-position: 52px 0, 0 0;
             pointer-events: none;
-            z-index: 1;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
+            border-radius: 8px;
         }
 
-        .note-content {
+        /* Content Styling */
+        .doc-content {
             position: relative;
             z-index: 2;
-            padding: 40px 35px 40px 50px;
-            min-height: 800px;
-        }
-
-        .note-title {
-            text-align: center;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: #2c3e50;
-        }
-
-        .note-section {
-            margin-bottom: 25px;
-        }
-
-        .note-section-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 12px;
-            text-decoration: underline;
-            text-decoration-thickness: 2px;
-        }
-
-        .note-content-item {
-            margin-left: 20px;
-            margin-bottom: 12px;
-            color: #34495e;
             line-height: 1.7;
+            font-size: 16px;
+            color: #1e293b;
         }
 
-        .note-highlight {
-            background: rgba(102, 126, 234, 0.15);
-            border-left: 4px solid;
+        /* Headings */
+        .doc-header-banner {
+            text-align: center;
+            margin-bottom: 36px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .doc-header-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            line-height: 1.25;
+            margin-bottom: 8px;
+        }
+
+        .doc-header-sub {
+            font-size: 15px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .doc-h1 {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid;
+            letter-spacing: -0.3px;
+            line-height: 1.3;
+        }
+
+        .doc-h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 28px 0 12px;
+            line-height: 1.35;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doc-h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 20px 0 8px;
+            line-height: 1.4;
+        }
+
+        .doc-p {
+            margin-bottom: 14px;
+            color: #334155;
+            line-height: 1.75;
+        }
+
+        /* Lists */
+        .doc-ul, .doc-ol {
+            margin: 10px 0 16px 28px;
+            color: #334155;
+        }
+
+        .doc-li {
+            margin-bottom: 6px;
+            line-height: 1.65;
+        }
+
+        /* Markdown Tables */
+        .doc-table-wrap {
+            overflow-x: auto;
+            margin: 18px 0 24px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            background: white;
+            break-inside: avoid;
+        }
+
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+            line-height: 1.55;
+        }
+
+        .doc-table th {
+            background: var(--theme-color, #4f46e5);
+            color: white;
+            font-weight: 700;
             padding: 12px 14px;
-            margin: 12px 20px;
-            border-radius: 8px;
-            font-size: 16px;
+            border-bottom: 2px solid rgba(0,0,0,0.15);
+            letter-spacing: 0.2px;
+        }
+
+        .doc-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #1e293b;
+            vertical-align: top;
+        }
+
+        .doc-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .doc-table tr:nth-child(even) td {
+            background: rgba(248, 250, 252, 0.7);
+        }
+
+        .doc-table tr:hover td {
+            background: rgba(79, 70, 229, 0.04);
+        }
+
+        /* Images */
+        .doc-image-figure {
+            margin: 24px auto;
+            text-align: center;
+            break-inside: avoid;
+        }
+
+        .doc-image-figure.align-left {
+            text-align: left;
+        }
+
+        .doc-image-figure.align-right {
+            text-align: right;
+        }
+
+        .doc-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+            border: 1px solid #e2e8f0;
+            display: inline-block;
+        }
+
+        .doc-image-caption {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* Highlight Boxes / Callouts */
+        .doc-callout {
+            margin: 16px 0;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border-left: 4px solid;
+            font-size: 15px;
+            line-height: 1.6;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            break-inside: avoid;
+        }
+
+        .doc-callout-icon {
+            font-size: 20px;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-top: 2px;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+        }
+
+        .doc-callout-text {
+            flex: 1;
+        }
+
+        .callout-success {
+            background: rgba(16, 185, 129, 0.12);
+            border-left-color: #10b981;
+            color: #065f46;
+        }
+
+        .callout-tip {
+            background: rgba(245, 158, 11, 0.12);
+            border-left-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .callout-purple {
+            background: rgba(139, 92, 246, 0.12);
+            border-left-color: #8b5cf6;
+            color: #5b21b6;
+        }
+
+        .callout-warning {
+            background: rgba(239, 68, 68, 0.12);
+            border-left-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .callout-info {
+            background: rgba(59, 130, 246, 0.12);
+            border-left-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        /* Code Blocks & Inline Code */
+        .doc-code-block {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 16px 0;
+            overflow-x: auto;
+            border: 1px solid #334155;
+            break-inside: avoid;
+        }
+
+        .doc-inline-code {
+            background: #f1f5f9;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            border: 1px solid #e2e8f0;
         }
 
         .empty-state {
-            color: #999;
+            color: #94a3b8;
             text-align: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
+            font-size: 15px;
         }
 
-        .watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 200%;
-            height: 200%;
-            font-size: 48px;
-            color: rgba(0, 0, 0, 0.08);
-            font-weight: 700;
-            z-index: 0;
-            pointer-events: none;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            line-height: 1;
+        /* Drag-over indicator on textarea */
+        textarea.dragover {
+            border-color: #4f46e5 !important;
+            background: #ede9fe !important;
         }
 
-        @media print {
-            .watermark {
-                color: rgba(0, 0, 0, 0.06);
-            }
+        /* Hidden file input */
+        #fileInput, #imageInput {
+            display: none;
         }
 
+        /* Print / PDF Export Styles */
         @media print {
             body {
-                background: white;
-                padding: 0;
+                background: white !important;
+                padding: 0 !important;
+                color: #000 !important;
+            }
+
+            .app-header,
+            .panel:first-child {
+                display: none !important;
             }
 
             .container {
-                grid-template-columns: 1fr;
+                display: block !important;
+                max-width: 100% !important;
             }
 
             .panel {
-                box-shadow: none;
-                page-break-inside: avoid;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
             }
 
-            .panel:first-child {
-                display: none;
+            #preview-wrapper {
+                max-height: none !important;
+                overflow: visible !important;
+                background: transparent !important;
+                padding: 0 !important;
             }
 
-            #preview {
-                max-height: none;
-                overflow: visible;
+            .doc-page {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 40px 48px 40px 76px !important;
+                min-height: auto !important;
+                page-break-after: auto !important;
             }
 
-            .note-page {
-                page-break-after: always;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
+            .doc-page.style-clean {
+                padding-left: 56px !important;
+                padding-right: 56px !important;
             }
 
-            .note-page::before {
+            .doc-page.style-lined {
+                padding-left: 76px !important;
+            }
+
+            .doc-h1, .doc-h2, .doc-table-wrap, .doc-image-figure, .doc-callout, .doc-code-block {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            .doc-page.style-lined::before {
                 display: block !important;
+                background-position: 52px 0, 0 0 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                color-adjust: exact !important;
+            }
+
+            .doc-table th {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1180px) {
             .container {
                 grid-template-columns: 1fr;
             }
@@ -397,92 +770,125 @@
     </style>
 </head>
 <body>
+    <header class="app-header">
+        <h1>🎓 Kalpana's Study Note & Doc Generator</h1>
+        <div class="header-actions">
+            <span style="font-size: 13px; opacity: 0.9;">Export beautiful, structured notes, guides & PDFs</span>
+        </div>
+    </header>
+
     <div class="container">
         <!-- Input Panel -->
         <div class="panel">
-            <h2>🎓 Kalpana's Study Note Generator</h2>
+            <h2>
+                <span>📝 Document Editor</span>
+                <span style="font-size: 12px; font-weight: normal; color: var(--text-muted);">Supports Paste (Ctrl+V) & Images</span>
+            </h2>
 
             <div class="form-group">
-                <label>📌 Topic Title</label>
-                <input type="text" id="topicTitle" placeholder="e.g., Cloud Computing Fundamentals, Database Design" value="GCP Fundamentals">
+                <label>📌 Document Title</label>
+                <input type="text" id="topicTitle" placeholder="e.g., RAG, Knowledge Graphs & AI Retrieval Systems" value="RAG, Knowledge Graphs & AI Retrieval Systems">
             </div>
 
             <div class="form-group">
-                <label>🎨 Theme Color</label>
+                <label>🎨 Accent Theme Color</label>
                 <div class="color-selector">
-                    <div class="color-option selected" style="background: #667eea;" data-color="#667eea" title="Blue"></div>
-                    <div class="color-option" style="background: #764ba2;" data-color="#764ba2" title="Purple"></div>
-                    <div class="color-option" style="background: #f093fb;" data-color="#f093fb" title="Pink"></div>
-                    <div class="color-option" style="background: #4facfe;" data-color="#4facfe" title="Sky Blue"></div>
-                    <div class="color-option" style="background: #00f2fe;" data-color="#00f2fe" title="Cyan"></div>
-                    <div class="color-option" style="background: #43e97b;" data-color="#43e97b" title="Green"></div>
-                    <div class="color-option" style="background: #fa709a;" data-color="#fa709a" title="Red"></div>
-                    <div class="color-option" style="background: #feca57;" data-color="#feca57" title="Yellow"></div>
+                    <div class="color-option selected" style="background: #4f46e5;" data-color="#4f46e5" title="Indigo"></div>
+                    <div class="color-option" style="background: #2563eb;" data-color="#2563eb" title="Royal Blue"></div>
+                    <div class="color-option" style="background: #0284c7;" data-color="#0284c7" title="Sky Blue"></div>
+                    <div class="color-option" style="background: #0d9488;" data-color="#0d9488" title="Teal"></div>
+                    <div class="color-option" style="background: #16a34a;" data-color="#16a34a" title="Green"></div>
+                    <div class="color-option" style="background: #9333ea;" data-color="#9333ea" title="Purple"></div>
+                    <div class="color-option" style="background: #e11d48;" data-color="#e11d48" title="Rose"></div>
+                    <div class="color-option" style="background: #ea580c;" data-color="#ea580c" title="Orange"></div>
+                    <div class="color-option" style="background: #334155;" data-color="#334155" title="Slate"></div>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>✏️ Font:</label>
+                <label>📄 Page Background Style</label>
+                <div class="style-selector" style="grid-template-columns: repeat(2, 1fr);">
+                    <button type="button" class="style-btn selected" data-style="clean">📄 Clean Doc</button>
+                    <button type="button" class="style-btn" data-style="lined">📝 Lined Paper</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>✏️ Typography Font:</label>
                 <div class="font-selector">
-                    <div class="font-option font-caveat selected" data-font="'Caveat', cursive" title="Caveat">Caveat</div>
-                    <div class="font-option font-indie" data-font="'Indie Flower', cursive" title="Indie Flower">Indie</div>
-                    <div class="font-option font-pacifico" data-font="'Pacifico', cursive" title="Pacifico">Pacifico</div>
-                    <div class="font-option font-permanent" data-font="'Permanent Marker', cursive" title="Marker">Marker</div>
-                    <div class="font-option font-satisfy" data-font="'Satisfy', cursive" title="Satisfy">Satisfy</div>
-                    <div class="font-option font-comfortaa" data-font="'Comfortaa', cursive" title="Comfortaa">Comfortaa</div>
-                    <div class="font-option font-patrick" data-font="'Patrick Hand', cursive" title="Patrick">Patrick</div>
-                    <div class="font-option font-quicksand" data-font="'Quicksand', sans-serif" title="Quicksand">Quicksand</div>
-                    <div class="font-option font-fredoka" data-font="'Fredoka', sans-serif" title="Fredoka">Fredoka</div>
-                    <div class="font-option font-poppins" data-font="'Poppins', sans-serif" title="Poppins">Poppins</div>
+                    <div class="font-option selected" data-font="'Plus Jakarta Sans', sans-serif" title="Clean Pro">Modern Pro</div>
+                    <div class="font-option" data-font="'Poppins', sans-serif" title="Poppins">Poppins</div>
+                    <div class="font-option" data-font="'Quicksand', sans-serif" title="Quicksand">Quicksand</div>
+                    <div class="font-option" data-font="'Caveat', cursive" title="Caveat (Handwritten)">Caveat</div>
+                    <div class="font-option" data-font="'Patrick Hand', cursive" title="Patrick Hand">Patrick</div>
+                    <div class="font-option" data-font="'Comfortaa', cursive" title="Comfortaa">Comfortaa</div>
+                    <div class="font-option" data-font="'Fredoka', sans-serif" title="Fredoka">Fredoka</div>
+                    <div class="font-option" data-font="'Indie Flower', cursive" title="Indie">Indie</div>
+                    <div class="font-option" data-font="'Pacifico', cursive" title="Pacifico">Pacifico</div>
+                    <div class="font-option" data-font="'Permanent Marker', cursive" title="Marker">Marker</div>
+                </div>
+            </div>
+
+            <!-- Unified Upload with Hover / Help Tooltip -->
+            <div class="editor-toolbar" style="align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button type="button" class="tool-btn primary" onclick="triggerUnifiedUpload()"
+                            title="Allowed: Markdown (.md), Text (.txt), Images (.png, .jpg, .jpeg, .webp, .svg, .gif)">
+                        📂 Upload File
+                    </button>
+                    <input type="file" id="unifiedFileInput" accept=".md,.txt,.png,.jpg,.jpeg,.webp,.svg,.gif" onchange="handleUnifiedFileSelected(this)" style="display: none;">
+
+                    <span class="upload-help-badge" tabindex="0">
+                        ℹ️ Allowed Files
+                        <span class="upload-tooltip">
+                            <strong>Accepted File Types:</strong><br>
+                            • <strong>Documents:</strong> Markdown (<code>.md</code>), Plain Text (<code>.txt</code>)<br>
+                            • <strong>Images:</strong> <code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.webp</code>, <code>.svg</code>, <code>.gif</code><br><br>
+                            <em>Tip: You can also paste screenshots directly with <b>Ctrl+V / Cmd+V</b> or drag & drop files!</em>
+                        </span>
+                    </span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>📚 Content (Use Format Below)</label>
-                <textarea id="contentInput" placeholder="Paste your content here following the format...">## Q1. What is GCP?
-GCP is a suite of cloud computing services offered by Google with computing power, storage, databases, networking, AI/ML, and analytics tools.
-
-✓ Key Benefit: Scalable, secure, reliable and pay-as-you-go cloud services.
-
-## Q2. Main GCP Services
-- Compute Engine: Virtual machines
-- Cloud Storage: Object storage
-- BigQuery: Data warehouse
-- Kubernetes Engine: Container orchestration
-- Cloud Networking: VPC and networking
-- AI/ML: Vertex AI
-
-💡 Think: Compute, Storage, Database, Networking, Big Data, AI/ML, DevOps</textarea>
+                <label>📚 Content (Markdown, Tables, Images & Highlights)</label>
+                <textarea id="contentInput" placeholder="Type or paste markdown content here...
+Tip: You can press Ctrl+V / Cmd+V to paste any screenshot or image directly!"></textarea>
             </div>
 
             <div class="format-hint">
-                <strong>📋 Format Guide:</strong><br>
-                <code>## Section Title</code> - Creates sections<br>
-                <code>Plain text</code> - Regular content<br>
-                <code>- Bullet point</code> - Creates bullet lists<br>
-                <code>✓ Key text</code> - Green highlight box<br>
-                <code>💡 Tip text</code> - Yellow highlight box<br>
-                <code>⭐ Important</code> - Purple highlight box
+                <strong>📋 Quick Guide:</strong><br>
+                <code># Title</code>, <code>## Section</code>, <code>### Sub</code> &nbsp;|&nbsp;
+                <code>**bold**</code>, <code>`code`</code><br>
+                <code>| Col 1 | Col 2 |</code> - Tables &nbsp;|&nbsp;
+                <code>![Caption](url)</code> - Images<br>
+                <code>✓ Key benefit</code> &nbsp;|&nbsp; <code>💡 Tip</code> &nbsp;|&nbsp; <code>⭐ Important</code> &nbsp;|&nbsp; <code>⚠️ Warning</code>
             </div>
 
             <div class="button-group">
-                <button class="btn-generate" onclick="generateNotes()">✨ Generate Notes</button>
-                <button class="btn-download" id="downloadBtn" onclick="downloadPDF()" disabled>📥 Download PDF</button>
+                <button class="btn btn-generate" onclick="generateNotes()">✨ Render Preview</button>
+                <button class="btn btn-download" id="downloadBtn" onclick="downloadPDF()">📥 Export PDF / Print</button>
             </div>
         </div>
 
         <!-- Preview Panel -->
         <div class="panel">
-            <h2>👁️ Preview</h2>
-            <div id="preview">
-                <div class="empty-state">👈 Enter content and click "Generate Notes" to see preview</div>
+            <h2>
+                <span>👁️ Live Preview</span>
+                <span id="pageCountNotice" style="font-size: 13px; font-weight: normal; color: var(--text-muted);"></span>
+            </h2>
+            <div id="preview-wrapper">
+                <div id="preview">
+                    <div class="empty-state">👈 Enter content and click "Render Preview"</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentThemeColor = '#667eea';
-        let currentFont = "'Caveat', cursive";
+        let currentThemeColor = '#4f46e5';
+        let currentFont = "'Plus Jakarta Sans', sans-serif";
+        let currentPaperStyle = 'clean';
         let notesGenerated = false;
 
         // Color selection
@@ -491,6 +897,7 @@ GCP is a suite of cloud computing services offered by Google with computing powe
                 document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
                 this.classList.add('selected');
                 currentThemeColor = this.dataset.color;
+                document.documentElement.style.setProperty('--theme-color', currentThemeColor);
                 if (notesGenerated) generateNotes();
             });
         });
@@ -505,12 +912,221 @@ GCP is a suite of cloud computing services offered by Google with computing powe
             });
         });
 
+        // Paper style selection
+        document.querySelectorAll('.style-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                currentPaperStyle = this.dataset.style;
+                if (notesGenerated) generateNotes();
+            });
+        });
+
+        // Unified upload trigger
+        function triggerUnifiedUpload() {
+            document.getElementById('unifiedFileInput').click();
+        }
+
+        function handleUnifiedFileSelected(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+
+            const name = file.name.toLowerCase();
+            const isImage = file.type.startsWith('image/') || /\.(png|jpg|jpeg|webp|svg|gif)$/i.test(name);
+            const isDoc = name.endsWith('.md') || name.endsWith('.txt') || file.type.startsWith('text/');
+
+            if (isImage) {
+                // Read image and insert into markdown at cursor
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Data = e.target.result;
+                    const cleanName = file.name.replace(/\.[^/.]+$/, "");
+                    insertAtCursor(`\n\n![${cleanName}](${base64Data})\n\n`);
+                    generateNotes();
+                };
+                reader.readAsDataURL(file);
+            } else if (isDoc) {
+                // Read markdown or text file and populate editor
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    document.getElementById('contentInput').value = text;
+                    // Auto-infer title if present
+                    const firstH1 = text.match(/^#\s+(.+)$/m) || text.match(/^\*\*(.+?)\*\*/m);
+                    if (firstH1) {
+                        document.getElementById('topicTitle').value = firstH1[1].replace(/\*\*/g, '').trim();
+                    }
+                    generateNotes();
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Unsupported file type. Please upload a Markdown (.md), Plain Text (.txt), or Image file (.png, .jpg, .jpeg, .webp, .svg, .gif).');
+            }
+            input.value = '';
+        }
+
+        // Helper to insert snippet at cursor in textarea
+        function insertAtCursor(text) {
+            const textarea = document.getElementById('contentInput');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const before = textarea.value.substring(0, start);
+            const after = textarea.value.substring(end);
+            textarea.value = before + text + after;
+            textarea.selectionStart = textarea.selectionEnd = start + text.length;
+            textarea.focus();
+        }
+
+        function insertSnippet(type) {
+            if (type === 'table') {
+                insertAtCursor('\n\n| Item / Component | Description | Practical Example |\n| :--- | :--- | :--- |\n| Vector DB | Stores text embeddings | Pinecone, pgvector |\n| Knowledge Graph | Connects entity relationships | Neo4j, Cypher |\n| LLM | Generates answers | Claude, GPT, Gemini |\n\n');
+            } else if (type === 'callout') {
+                insertAtCursor('\n💡 Key Insight: Always choose the simplest retrieval approach that answers your users\' questions.\n');
+            } else if (type === 'code') {
+                insertAtCursor('\n```bash\n# Example architecture or code\nSELECT * FROM confluence_docs WHERE tags CONTAINS "rag";\n```\n');
+            }
+            generateNotes();
+        }
+
+        // Direct Clipboard Image Paste into textarea
+        const textarea = document.getElementById('contentInput');
+        textarea.addEventListener('paste', function(e) {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    e.preventDefault();
+                    const blob = items[i].getAsFile();
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        const base64 = evt.target.result;
+                        insertAtCursor(`\n\n![Pasted Image](${base64})\n\n`);
+                        generateNotes();
+                    };
+                    reader.readAsDataURL(blob);
+                    return;
+                }
+            }
+        });
+
+        // Drag & Drop image files directly onto textarea
+        textarea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+
+        textarea.addEventListener('dragleave', function(e) {
+            this.classList.remove('dragover');
+        });
+
+        textarea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                const file = e.dataTransfer.files[0];
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        insertAtCursor(`\n\n![${file.name}](${evt.target.result})\n\n`);
+                        generateNotes();
+                    };
+                    reader.readAsDataURL(file);
+                } else if (file.name.endsWith('.md') || file.name.endsWith('.txt')) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        textarea.value = evt.target.result;
+                        generateNotes();
+                    };
+                    reader.readAsText(file);
+                }
+            }
+        });
+
+        // Markdown inline parser
+        function parseInline(text) {
+            if (!text) return '';
+            // Escape basic HTML
+            let out = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            // Bold **text** or __text__
+            out = out.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            out = out.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+            // Italic *text* or _text_
+            out = out.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            out = out.replace(/_(.*?)_/g, '<em>$1</em>');
+
+            // Strikethrough ~~text~~
+            out = out.replace(/~~(.*?)~~/g, '<del>$1</del>');
+
+            // Inline code `code`
+            out = out.replace(/`([^`]+)`/g, '<code class="doc-inline-code">$1</code>');
+
+            // Markdown links [text](url)
+            out = out.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" style="color: var(--theme-color, #4f46e5); font-weight:600; text-decoration: underline;">$1</a>');
+
+            return out;
+        }
+
+        // Parse Table Block
+        function renderTable(tableLines) {
+            if (tableLines.length < 2) return null;
+
+            const wrap = document.createElement('div');
+            wrap.className = 'doc-table-wrap';
+
+            const table = document.createElement('table');
+            table.className = 'doc-table';
+            table.style.setProperty('--theme-color', currentThemeColor);
+
+            // Clean cells
+            const parseRow = line => line
+                .replace(/^\|/, '')
+                .replace(/\|$/, '')
+                .split('|')
+                .map(cell => cell.trim());
+
+            const headerCells = parseRow(tableLines[0]);
+            const thead = document.createElement('thead');
+            const headTr = document.createElement('tr');
+            headerCells.forEach(cell => {
+                const th = document.createElement('th');
+                th.style.background = currentThemeColor;
+                th.innerHTML = parseInline(cell);
+                headTr.appendChild(th);
+            });
+            thead.appendChild(headTr);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            // Skip line 1 if it is separator (:---, ---, etc.)
+            const startIdx = tableLines[1].includes('---') ? 2 : 1;
+
+            for (let i = startIdx; i < tableLines.length; i++) {
+                const rowCells = parseRow(tableLines[i]);
+                if (rowCells.length === 0 || (rowCells.length === 1 && !rowCells[0])) continue;
+                const tr = document.createElement('tr');
+                rowCells.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.innerHTML = parseInline(cell);
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            }
+
+            table.appendChild(tbody);
+            wrap.appendChild(table);
+            return wrap;
+        }
+
         function generateNotes() {
-            const title = document.getElementById('topicTitle').value || 'Study Notes';
+            const title = document.getElementById('topicTitle').value.trim() || 'Study Notes';
             const content = document.getElementById('contentInput').value;
 
             if (!content.trim()) {
-                alert('Please enter some content!');
+                document.getElementById('preview').innerHTML = '<div class="empty-state">👈 Enter content and click "Render Preview"</div>';
                 return;
             }
 
@@ -518,90 +1134,207 @@ GCP is a suite of cloud computing services offered by Google with computing powe
             preview.innerHTML = '';
 
             const page = document.createElement('div');
-            page.className = 'note-page';
+            page.className = `doc-page style-${currentPaperStyle}`;
 
-            const noteContent = document.createElement('div');
-            noteContent.className = 'note-content';
-            noteContent.style.fontFamily = currentFont;
+            const docContent = document.createElement('div');
+            docContent.className = 'doc-content';
+            docContent.style.fontFamily = currentFont;
 
-            // Add title
-            const titleEl = document.createElement('div');
-            titleEl.className = 'note-title';
-            titleEl.textContent = '☁️ ' + title + ' ☁️';
-            noteContent.appendChild(titleEl);
+            // Title Banner
+            const banner = document.createElement('div');
+            banner.className = 'doc-header-banner';
 
-            // Parse content
-            const lines = content.split('\n');
-            let currentSection = null;
+            const h1 = document.createElement('h1');
+            h1.className = 'doc-header-title';
+            h1.style.color = currentThemeColor;
+            h1.textContent = title;
+            banner.appendChild(h1);
 
-            lines.forEach(line => {
-                line = line.trim();
-                if (!line) return;
+            const sub = document.createElement('div');
+            sub.className = 'doc-header-sub';
+            sub.textContent = 'Kalpana\'s Reference & Study Guide';
+            banner.appendChild(sub);
 
-                if (line.startsWith('##')) {
-                    // Section title
-                    const section = document.createElement('div');
-                    section.className = 'note-section';
+            docContent.appendChild(banner);
 
-                    const sectionTitle = document.createElement('div');
-                    sectionTitle.className = 'note-section-title';
-                    sectionTitle.style.color = currentThemeColor;
-                    sectionTitle.style.textDecorationColor = currentThemeColor;
-                    sectionTitle.textContent = line.replace('##', '').trim();
+            // Parser State
+            const rawLines = content.split('\n');
+            let i = 0;
+            let currentList = null;
+            let currentListType = null; // 'ul' or 'ol'
 
-                    section.appendChild(sectionTitle);
-                    noteContent.appendChild(section);
-                    currentSection = section;
-                } else if (line.startsWith('✓')) {
-                    // Green highlight
-                    const highlight = document.createElement('div');
-                    highlight.className = 'note-highlight';
-                    highlight.style.borderLeftColor = '#4caf50';
-                    highlight.style.background = 'rgba(76, 175, 80, 0.15)';
-                    highlight.style.color = '#2e7d32';
-                    highlight.textContent = line;
-                    (currentSection || noteContent).appendChild(highlight);
-                } else if (line.startsWith('💡')) {
-                    // Yellow highlight
-                    const highlight = document.createElement('div');
-                    highlight.className = 'note-highlight';
-                    highlight.style.borderLeftColor = '#ffc107';
-                    highlight.style.background = 'rgba(255, 193, 7, 0.15)';
-                    highlight.style.color = '#f57f17';
-                    highlight.textContent = line;
-                    (currentSection || noteContent).appendChild(highlight);
-                } else if (line.startsWith('⭐')) {
-                    // Purple highlight
-                    const highlight = document.createElement('div');
-                    highlight.className = 'note-highlight';
-                    highlight.style.borderLeftColor = '#9c27b0';
-                    highlight.style.background = 'rgba(156, 39, 176, 0.15)';
-                    highlight.style.color = '#6a1b9a';
-                    highlight.textContent = line;
-                    (currentSection || noteContent).appendChild(highlight);
-                } else if (line.startsWith('-')) {
-                    // Bullet point
-                    const item = document.createElement('div');
-                    item.className = 'note-content-item';
-                    item.style.marginLeft = '40px';
-                    item.textContent = line;
-                    (currentSection || noteContent).appendChild(item);
-                } else {
-                    // Regular text
-                    const item = document.createElement('div');
-                    item.className = 'note-content-item';
-                    item.textContent = line;
-                    (currentSection || noteContent).appendChild(item);
+            function closeList() {
+                if (currentList) {
+                    docContent.appendChild(currentList);
+                    currentList = null;
+                    currentListType = null;
                 }
-            });
+            }
 
-            // Add watermark
-            const watermark = document.createElement('div');
-            watermark.className = 'watermark';
-            watermark.textContent = "Kalpana's Study Notes";
-            page.appendChild(watermark);
+            while (i < rawLines.length) {
+                let line = rawLines[i].trim();
 
-            page.appendChild(noteContent);
+                // Empty line
+                if (!line) {
+                    closeList();
+                    i++;
+                    continue;
+                }
+
+                // Table detection (line starts with | or contains multiple |)
+                if (line.startsWith('|') && line.includes('|', 1)) {
+                    closeList();
+                    const tableLines = [];
+                    while (i < rawLines.length && rawLines[i].trim().startsWith('|')) {
+                        tableLines.push(rawLines[i].trim());
+                        i++;
+                    }
+                    const tbl = renderTable(tableLines);
+                    if (tbl) docContent.appendChild(tbl);
+                    continue;
+                }
+
+                // Code block (```)
+                if (line.startsWith('```')) {
+                    closeList();
+                    i++;
+                    const codeLines = [];
+                    while (i < rawLines.length && !rawLines[i].trim().startsWith('```')) {
+                        codeLines.push(rawLines[i]);
+                        i++;
+                    }
+                    i++; // skip closing ```
+                    const pre = document.createElement('pre');
+                    pre.className = 'doc-code-block';
+                    pre.textContent = codeLines.join('\n');
+                    docContent.appendChild(pre);
+                    continue;
+                }
+
+                // Image: ![alt](src)
+                const imgMatch = line.match(/^!\[(.*?)\]\((.*?)\)$/);
+                if (imgMatch) {
+                    closeList();
+                    const fig = document.createElement('figure');
+                    fig.className = 'doc-image-figure';
+
+                    const img = document.createElement('img');
+                    img.className = 'doc-image';
+                    img.src = imgMatch[2];
+                    img.alt = imgMatch[1];
+                    fig.appendChild(img);
+
+                    if (imgMatch[1] && imgMatch[1].trim() !== 'Image' && imgMatch[1].trim() !== 'Pasted Image') {
+                        const cap = document.createElement('figcaption');
+                        cap.className = 'doc-image-caption';
+                        cap.textContent = imgMatch[1];
+                        fig.appendChild(cap);
+                    }
+
+                    docContent.appendChild(fig);
+                    i++;
+                    continue;
+                }
+
+                // Headings
+                if (line.startsWith('#')) {
+                    closeList();
+                    const levelMatch = line.match(/^(#+)\s*(.*)$/);
+                    if (levelMatch) {
+                        const level = levelMatch[1].length;
+                        const headingText = levelMatch[2].replace(/^\*\*(.*)\*\*$/, '$1').trim();
+
+                        const h = document.createElement(level === 1 ? 'h1' : level === 2 ? 'h2' : 'h3');
+                        h.className = `doc-h${Math.min(level, 3)}`;
+                        h.style.color = level === 1 ? currentThemeColor : '#0f172a';
+                        if (level === 1) {
+                            h.style.borderBottomColor = currentThemeColor;
+                        }
+                        h.innerHTML = parseInline(headingText);
+                        docContent.appendChild(h);
+                        i++;
+                        continue;
+                    }
+                }
+
+                // Callouts (✓, 💡, ⭐, ⚠️, 📌)
+                const calloutRegex = /^([✓💡⭐⚠️📌])\s*(.*)$/;
+                const calloutMatch = line.match(calloutRegex);
+                if (calloutMatch) {
+                    closeList();
+                    const icon = calloutMatch[1];
+                    const text = calloutMatch[2];
+
+                    const box = document.createElement('div');
+                    let typeClass = 'callout-info';
+                    if (icon === '✓') typeClass = 'callout-success';
+                    else if (icon === '💡') typeClass = 'callout-tip';
+                    else if (icon === '⭐') typeClass = 'callout-purple';
+                    else if (icon === '⚠️') typeClass = 'callout-warning';
+
+                    box.className = `doc-callout ${typeClass}`;
+
+                    const iconEl = document.createElement('div');
+                    iconEl.className = 'doc-callout-icon';
+                    iconEl.textContent = icon;
+                    box.appendChild(iconEl);
+
+                    const textEl = document.createElement('div');
+                    textEl.className = 'doc-callout-text';
+                    textEl.innerHTML = parseInline(text);
+                    box.appendChild(textEl);
+
+                    docContent.appendChild(box);
+                    i++;
+                    continue;
+                }
+
+                // Bullet Lists (- or *)
+                const bulletMatch = line.match(/^[-*]\s+(.*)$/);
+                if (bulletMatch) {
+                    if (currentListType !== 'ul') {
+                        closeList();
+                        currentList = document.createElement('ul');
+                        currentList.className = 'doc-ul';
+                        currentListType = 'ul';
+                    }
+                    const li = document.createElement('li');
+                    li.className = 'doc-li';
+                    li.innerHTML = parseInline(bulletMatch[1]);
+                    currentList.appendChild(li);
+                    i++;
+                    continue;
+                }
+
+                // Numbered Lists (1. )
+                const numMatch = line.match(/^(\d+)\.\s+(.*)$/);
+                if (numMatch) {
+                    if (currentListType !== 'ol') {
+                        closeList();
+                        currentList = document.createElement('ol');
+                        currentList.className = 'doc-ol';
+                        currentListType = 'ol';
+                    }
+                    const li = document.createElement('li');
+                    li.className = 'doc-li';
+                    li.innerHTML = parseInline(numMatch[2]);
+                    currentList.appendChild(li);
+                    i++;
+                    continue;
+                }
+
+                // Regular Paragraph
+                closeList();
+                const p = document.createElement('p');
+                p.className = 'doc-p';
+                p.innerHTML = parseInline(line);
+                docContent.appendChild(p);
+                i++;
+            }
+
+            closeList();
+
+            page.appendChild(docContent);
             preview.appendChild(page);
 
             notesGenerated = true;
@@ -609,18 +1342,126 @@ GCP is a suite of cloud computing services offered by Google with computing powe
         }
 
         function downloadPDF() {
-            const title = document.getElementById('topicTitle').value || 'StudyNotes';
             window.print();
         }
 
-        // Generate preview on load with sample content
-        window.addEventListener('load', function() {
+        // Sample Loaders
+        function loadSampleGuide() {
+            document.getElementById('topicTitle').value = 'RAG, Knowledge Graphs & AI Retrieval Systems';
+            document.getElementById('contentInput').value = `# 1. The big picture: what problem are we solving?
+
+Imagine a company has 128 Confluence pages describing systems, APIs, policies, incidents, owners, and business processes. Together they contain about 1.3 million tokens. A user asks: “Which service owns customer sync, and what breaks if it is unavailable?”
+
+An LLM is good at understanding and writing language, but it may not know the company's private or latest information. We need a way to find the right internal information and provide it to the model at answer time.
+
+| Component | Plain-English meaning | Example |
+| :---- | :---- | :---- |
+| **LLM** | The language model that reasons over input and generates text | Claude, GPT, Gemini |
+| **Source data** | The company information the answer should be based on | Confluence pages, PDFs, Salesforce, BigQuery |
+| **Retrieval** | Finding information relevant to a question | Find the page about customer sync |
+| **Context** | The information included in the model's prompt | Two relevant paragraphs and their page links |
+| **Generation** | The model's response based on the question and context | Explain the owner and dependencies |
+
+✓ Key Takeaway: RAG does not train or fine-tune the LLM; it supplies information dynamically at inference time.
+
+## 2. Essential basics before RAG
+
+### 2.1 What is an LLM and Token?
+A token is a unit of text used by a model. It can be a word, part of a word, or punctuation. The 1.3 million tokens describes the approximate size of the company corpus.
+
+### 2.2 What is an Embedding?
+An embedding is a list of numbers representing text in a way that captures aspects of its meaning. Texts with similar meaning often have nearby vectors in the embedding space.
+
+💡 Tip: Embedding search can match concepts even when they do not share the exact same keywords!
+
+## 3. Knowledge Graphs & Neo4j
+
+A knowledge graph represents entities and the relationships between them. Entities are commonly represented as nodes; relationships are edges.
+
+\`\`\`cypher
+(:Service {name: "Customer Sync"})
+  -[:OWNED_BY]-> (:Team {name: "CRM Platform"})
+  -[:DEPENDS_ON]-> (:Service {name: "Identity API"})
+\`\`\`
+
+| Graph Element | Plain Example |
+| :--- | :--- |
+| **Node / Entity** | Service: Customer Sync |
+| **Node / Entity** | Team: CRM Platform |
+| **Relationship** | Customer Sync - OWNED_BY -> CRM Platform |
+| **Relationship** | Customer Sync - DEPENDS_ON -> Identity API |
+
+⭐ Important: Use a Knowledge Graph when questions depend on multi-hop relationships across multiple documents or services.`;
+
+            // Switch to Modern Pro font & Clean Doc style for this guide
+            document.querySelectorAll('.font-option').forEach(f => {
+                f.classList.remove('selected');
+                if (f.textContent.includes('Modern Pro')) f.classList.add('selected');
+            });
+            currentFont = "'Plus Jakarta Sans', sans-serif";
+
+            document.querySelectorAll('.style-btn').forEach(b => {
+                b.classList.remove('selected');
+                if (b.dataset.style === 'clean') b.classList.add('selected');
+            });
+            currentPaperStyle = 'clean';
+
             generateNotes();
+        }
+
+        function loadSampleGCP() {
+            document.getElementById('topicTitle').value = 'GCP Fundamentals Study Notes';
+            document.getElementById('contentInput').value = `## 1. What is GCP?
+GCP is a suite of cloud computing services offered by Google with computing power, storage, databases, networking, AI/ML, and analytics tools.
+
+✓ Key Benefit: Scalable, secure, reliable and pay-as-you-go cloud services.
+
+## 2. Main GCP Services Overview
+
+| Category | GCP Service | Primary Use Case |
+| :--- | :--- | :--- |
+| **Compute** | Compute Engine | Scalable Virtual Machines |
+| **Containers** | GKE (Kubernetes Engine) | Managed Container Orchestration |
+| **Storage** | Cloud Storage | Secure Object & Blob Storage |
+| **Database** | Cloud Spanner / SQL | Relational SQL with Global Consistency |
+| **Big Data** | BigQuery | Serverless Petabyte-scale Data Warehouse |
+| **AI / ML** | Vertex AI | Unified Machine Learning & LLM Platform |
+
+💡 Tip: Think in terms of Compute, Storage, Database, Networking, Big Data, AI/ML, DevOps!
+
+⭐ Important: Remember IAM roles follow the Principle of Least Privilege.`;
+
+            // Switch to Caveat & Lined Paper
+            document.querySelectorAll('.font-option').forEach(f => {
+                f.classList.remove('selected');
+                if (f.textContent.includes('Caveat')) f.classList.add('selected');
+            });
+            currentFont = "'Caveat', cursive";
+
+            document.querySelectorAll('.style-btn').forEach(b => {
+                b.classList.remove('selected');
+                if (b.dataset.style === 'lined') b.classList.add('selected');
+            });
+            currentPaperStyle = 'lined';
+
+            generateNotes();
+        }
+
+        // Initial render on load
+        window.addEventListener('load', function() {
+            loadSampleGuide();
         });
 
-        // Auto-generate on input
-        document.getElementById('contentInput').addEventListener('change', generateNotes);
-        document.getElementById('topicTitle').addEventListener('change', generateNotes);
+        // Auto-refresh when typing pauses
+        let debounceTimer;
+        document.getElementById('contentInput').addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(generateNotes, 300);
+        });
+        document.getElementById('topicTitle').addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(generateNotes, 300);
+        });
     </script>
 </body>
 </html>
