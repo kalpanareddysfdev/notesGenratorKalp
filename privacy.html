@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Privacy information for Kalpana's Learning Hub.">
+  <title>Privacy | Kalpana's Learning Hub</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0f19;
+      --surface: #111827;
+      --border: #1f293d;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --primary: #60a5fa;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+    }
+
+    main {
+      width: min(100%, 760px);
+      padding: 36px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+    }
+
+    h1 { margin: 0 0 16px; }
+    h2 { margin: 24px 0 8px; font-size: 1.1rem; }
+    p, li { color: var(--muted); }
+    a { color: var(--primary); }
+    .back { display: inline-block; margin-top: 20px; }
+
+    @media (max-width: 480px) {
+      main { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Privacy</h1>
+    <p>This page describes how the current version of Kalpana's Learning Hub works. If the site's services change, this notice should be updated.</p>
+
+    <h2>Information you provide to the study-note generator</h2>
+    <p>If you use its AI generation feature, the topic or notes you enter are sent from your browser to Pollinations' text service at <a href="https://text.pollinations.ai/">text.pollinations.ai</a>, together with instructions needed to generate a response and the selected model name. The response is returned to your browser for display. Do not submit passwords, confidential material, or other sensitive information. Pollinations operates independently; review its own privacy information to understand its handling and retention of requests.</p>
+
+    <h2>Other services used by this site</h2>
+    <ul>
+      <li>The homepage requests the public repository file listing from the GitHub API to discover resources. GitHub receives that request directly from your browser.</li>
+      <li>Pages load fonts from Google Fonts. Your browser connects to Google's font service to retrieve them.</li>
+      <li>The homepage saves your light/dark theme choice in your browser's local storage under <code>hub-theme</code>. The preference stays in your browser and is not sent to a site server.</li>
+    </ul>
+    <p>These services may process technical information such as network or device details when your browser connects to them. Their processing is governed by their own policies and settings.</p>
+
+    <h2>Cookies, analytics, and advertising</h2>
+    <p>The current site code does not include analytics or advertising scripts and does not set advertising cookies. This may change if such services are added. If ads are introduced, this notice and any consent controls required for the locations and ad services involved will be updated before those services are enabled.</p>
+
+    <h2>Contact</h2>
+    <p>For privacy questions, email <a href="mailto:kalpanavreddy1996@gmail.com">kalpanavreddy1996@gmail.com</a>.</p>
+
+    <a class="back" href="index.html">← Back to the Learning Hub</a>
+  </main>
+</body>
+</html>

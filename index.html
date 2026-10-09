@@ -209,6 +209,32 @@
       line-height: 1.6;
     }
 
+    .intro {
+      max-width: 820px;
+      margin: 0 auto 40px;
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 18px;
+    }
+
+    .intro h2 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .intro p, .intro li {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .intro ol {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding-left: 22px;
+    }
+
     /* Controls (Search & Filter) */
     .controls-wrapper {
       background: var(--surface);
@@ -458,6 +484,17 @@
       <p>Interactive web generators, technical cloud architecture notes, and comprehensive reference PDFs.</p>
     </header>
 
+    <section class="intro" aria-labelledby="getting-started">
+      <h2 id="getting-started">A practical library for learning and planning</h2>
+      <p>Use the tools and reference materials here to turn a question into a study resource, review technical topics, or compare property investment scenarios. The collection brings together browser-based tools and downloadable guides in one searchable place.</p>
+      <p>For a study guide, enter one focused topic or paste your own notes into the generator, review and edit its draft, and use your browser's print dialog to save the result as a PDF. Verify important facts against reliable references before relying on generated content.</p>
+      <p>For the PG report, change assumptions such as occupancy or costs and compare the resulting estimates. The output depends on the values you enter, so treat it as a planning aid rather than financial advice.</p>
+      <ol>
+        <li>Choose a tool or guide below that matches the task you are working on.</li>
+        <li>Use the search box or category buttons to find the relevant tool or document.</li>
+      </ol>
+    </section>
+
     <!-- Search & Filter Controls -->
     <div class="controls-wrapper">
       <div class="search-box">
@@ -577,7 +614,7 @@
 
     <!-- Footer -->
     <footer>
-      <p>Curated with ❤️ by Kalpana &bull; Hosted on <a href="https://learn.pgmaaya.com">learn.pgmaaya.com</a></p>
+      <p>Curated with ❤️ by Kalpana &bull; Hosted on <a href="https://learn.pgmaaya.com">learn.pgmaaya.com</a> &bull; <a href="about.html">About</a> &bull; <a href="privacy.html">Privacy</a> &bull; <a href="contact.html">Contact</a></p>
     </footer>
   </div>
 
@@ -655,11 +692,11 @@
         const grid = document.getElementById('itemsGrid');
         const emptyEl = document.getElementById('emptyState');
 
-        // Filter out system files, hidden files, and the hub index
+        // Filter out system files, hidden files, hub pages, and the index
         const validFiles = files.filter(f => {
           if (f.type !== 'file') return false;
           const name = f.name.toLowerCase();
-          if (name.startsWith('.') || name === 'cname' || name === 'index.html') return false;
+          if (name.startsWith('.') || ['cname', 'index.html', 'about.html', 'contact.html', 'privacy.html'].includes(name)) return false;
           return name.endsWith('.html') || name.endsWith('.pdf') || name.endsWith('.doc') || name.endsWith('.docx') || name.endsWith('.md');
         });
 

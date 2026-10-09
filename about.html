@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="About Kalpana's Learning Hub, a collection of study resources and practical browser-based tools.">
+  <title>About | Kalpana's Learning Hub</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0f19;
+      --surface: #111827;
+      --border: #1f293d;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --primary: #60a5fa;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+    }
+
+    main {
+      width: min(100%, 720px);
+      padding: 36px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+    }
+
+    h1 { margin: 0 0 16px; }
+    h2 { margin: 24px 0 8px; font-size: 1.1rem; }
+    p, li { color: var(--muted); }
+    a { color: var(--primary); }
+    .back { display: inline-block; margin-top: 20px; }
+
+    @media (max-width: 480px) {
+      main { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>About Kalpana's Learning Hub</h1>
+    <p>Kalpana's Learning Hub is a personal collection of study materials and browser-based tools for exploring technical topics and organizing practical decisions.</p>
+    <h2>What you'll find here</h2>
+    <ul>
+      <li>A study-note generator for drafting structured notes from a topic or source text.</li>
+      <li>Reference PDFs covering cloud fundamentals, AI tools, and study workflows.</li>
+      <li>A PG property report tool for exploring costs, occupancy, and return assumptions.</li>
+    </ul>
+    <p>Generated study material can be incomplete or inaccurate, so check important facts against dependable sources. Calculations are estimates based on the values entered and are not financial advice.</p>
+    <p>For questions or feedback, visit the <a href="contact.html">Contact page</a>.</p>
+    <a class="back" href="index.html">← Back to the Learning Hub</a>
+  </main>
+</body>
+</html>
