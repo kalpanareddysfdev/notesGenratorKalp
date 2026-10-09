@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <!-- Background Gradient: Electric Indigo to Royal Violet -->
+    <linearGradient id="learnBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4338ca"/>
+      <stop offset="45%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <!-- Golden Accent Gradient -->
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="softShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0f0b36" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Base with smooth corners -->
+  <rect width="512" height="512" rx="116" fill="url(#learnBg)"/>
+
+  <!-- Subtle inner border highlight -->
+  <rect x="8" y="8" width="496" height="496" rx="108" fill="none" stroke="#ffffff" stroke-width="5" stroke-opacity="0.18"/>
+
+  <!-- Main Illustration Group -->
+  <g filter="url(#softShadow)">
+    <!-- Book Back Cover / Base depth -->
+    <path d="M 256 390 C 210 368 140 372 88 392 L 88 184 C 140 164 210 160 256 182 C 302 160 372 164 424 184 L 424 392 C 372 372 302 368 256 390 Z" fill="#312e81"/>
+
+    <!-- Left Page Block -->
+    <path d="M 250 374 C 206 354 142 358 98 376 L 98 174 C 142 156 206 152 250 172 Z" fill="#ffffff"/>
+
+    <!-- Right Page Block -->
+    <path d="M 262 374 C 306 354 370 358 414 376 L 414 174 C 370 156 306 152 262 172 Z" fill="#f8fafc"/>
+
+    <!-- Central Spine Highlight -->
+    <path d="M 256 176 L 256 384" stroke="#cbd5e1" stroke-width="8" stroke-linecap="round"/>
+
+    <!-- Left Page Content Lines (representing study notes) -->
+    <path d="M 136 216 C 168 206 204 206 224 212" fill="none" stroke="#6366f1" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 136 256 C 168 246 204 246 224 252" fill="none" stroke="#818cf8" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 136 296 C 168 286 204 286 224 292" fill="none" stroke="#818cf8" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 136 336 C 164 328 194 328 214 332" fill="none" stroke="#c7d2fe" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- Right Page Content Lines -->
+    <path d="M 288 212 C 308 206 344 206 376 216" fill="none" stroke="#6366f1" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 288 252 C 308 246 344 246 376 256" fill="none" stroke="#818cf8" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 288 292 C 308 286 344 286 376 296" fill="none" stroke="#818cf8" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 288 332 C 308 328 338 328 366 336" fill="none" stroke="#c7d2fe" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- Golden Bookmark Ribbon hanging from center -->
+    <path d="M 242 168 L 242 278 L 256 264 L 270 278 L 270 168 Z" fill="url(#gold)"/>
+
+    <!-- Sparkle / Star of Knowledge top right -->
+    <path d="M 400 90 Q 400 120 415 120 Q 400 120 400 150 Q 400 120 385 120 Q 400 120 400 90 Z" fill="url(#gold)"/>
+
+    <!-- Mini sparkle top left -->
+    <path d="M 115 110 Q 115 125 125 125 Q 115 125 115 140 Q 115 125 105 125 Q 115 125 115 110 Z" fill="#38bdf8"/>
+  </g>
+</svg>
