@@ -3,21 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Contact Kalpana's Learning Hub.">
-  <title>Contact | Kalpana's Learning Hub</title>
+  <meta name="description" content="Connect with Kalpana Reddy about Salesforce, AI, and learning together.">
+  <title>Contact | Kalpana Reddy</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portfolio.css">
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #0b0f19;
-      --surface: #111827;
-      --border: #1f293d;
-      --text: #f3f4f6;
-      --muted: #9ca3af;
-      --primary: #60a5fa;
+      --text: var(--ink);
+      --primary: var(--blue);
     }
 
     * { box-sizing: border-box; }
@@ -54,9 +50,26 @@
 </head>
 <body>
   <main>
-    <h1>Contact</h1>
-    <p>For questions or feedback about Kalpana's Learning Hub, email:</p>
-    <p><a href="mailto:kalpanavreddy1996@gmail.com">kalpanavreddy1996@gmail.com</a></p>
+    <h1>Let's connect.</h1>
+    <p>I'm Kalpana Reddy. Have a question about my notes, a learning experience to share, or just want to say hello? Find me here:</p>
+    <div class="contact-socials">
+      <a class="social-card social-linkedin" href="https://www.linkedin.com/in/kalpana-reddy-165485202/" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><svg class="social-svg" aria-hidden="true"><use href="social-icons.svg#linkedin"></use></svg></span>
+        <span class="social-copy"><strong>LinkedIn</strong><span>Kalpana Reddy <span class="follower-label">3K followers</span></span></span><span class="social-arrow" aria-hidden="true">&nearr;</span>
+      </a>
+      <a class="social-card social-instagram" href="https://www.instagram.com/kalpanadecoded/" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><svg class="social-svg" aria-hidden="true"><use href="social-icons.svg#instagram"></use></svg></span>
+        <span class="social-copy"><strong>Instagram</strong><span>@kalpanadecoded</span></span><span class="social-arrow" aria-hidden="true">&nearr;</span>
+      </a>
+      <a class="social-card social-github" href="https://github.com/kalpanareddysfdev" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><svg class="social-svg" aria-hidden="true"><use href="social-icons.svg#github"></use></svg></span>
+        <span class="social-copy"><strong>GitHub</strong><span>@kalpanareddysfdev</span></span><span class="social-arrow" aria-hidden="true">&nearr;</span>
+      </a>
+      <a class="social-card social-email" href="mailto:kalpanavreddy1996@gmail.com">
+        <span class="social-icon"><svg class="social-svg" aria-hidden="true"><use href="social-icons.svg#email"></use></svg></span>
+        <span class="social-copy"><strong>Say hello</strong><span>kalpanavreddy1996@gmail.com</span></span><span class="social-arrow" aria-hidden="true">&nearr;</span>
+      </a>
+    </div>
     <a class="back" href="index.html">← Back to the Learning Hub</a>
   </main>
 </body>

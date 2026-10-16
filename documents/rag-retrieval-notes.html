@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG, Knowledge Graphs & AI Retrieval Systems | Kalpana Reddy</title>
+<style>
+@page { size: A4; margin: 18mm 17mm 19mm; }
+* { box-sizing: border-box; }
+body { margin: 0; color: #203047; background: white; font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; line-height: 1.58; }
+header { border-bottom: 2px solid #245bd7; padding-bottom: 18px; margin-bottom: 22px; }
+.eyebrow { color: #245bd7; font-size: 8pt; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+h1 { font-size: 28pt; line-height: 1.17; letter-spacing: -.7px; margin: 15px 0; max-width: 560px; }
+.subtitle { font-size: 11pt; color: #526480; margin: 0 0 18px; }
+.author { font-size: 9pt; color: #526480; }
+h2 { color: #174ba5; font-size: 16pt; line-height: 1.3; margin: 26px 0 12px; padding-bottom: 7px; border-bottom: 1px solid #dce5f3; break-after: avoid; }
+h3 { color: #203047; font-size: 11.5pt; margin: 19px 0 8px; line-height: 1.4; break-after: avoid; }
+p { margin: 0 0 11px; orphans: 3; widows: 3; overflow-wrap: anywhere; }
+ul, ol { padding-left: 20px; margin: 7px 0 15px; }
+li { padding-left: 3px; margin-bottom: 7px; break-inside: avoid; }
+li::marker { color: #245bd7; }
+table { width: 100%; border-collapse: collapse; font-size: 9pt; line-height: 1.48; margin: 14px 0 20px; table-layout: fixed; }
+thead { display: table-header-group; }
+th { background: #eaf0ff; color: #174ba5; font-weight: 700; text-align: left; }
+th, td { border: 1px solid #d4deed; padding: 9px 10px; vertical-align: top; overflow-wrap: anywhere; }
+tr { break-inside: avoid; }
+tbody tr:nth-child(even) { background: #f7f9fd; }
+.flow { background: #f2f6fc; padding: 12px; border-left: 3px solid #245bd7; font-family: "Courier New", monospace; font-size: 9pt; line-height: 1.6; }
+footer { margin-top: 25px; border-top: 1px solid #dce5f3; padding-top: 10px; font-size: 8pt; color: #637086; }
+@media screen { body { max-width: 840px; margin: 35px auto; padding: 30px; } }
+@media print { * { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style></head><body>
+<header><div class="eyebrow">Kalpana Reddy / Learning Notes</div><h1>RAG, Knowledge Graphs & AI Retrieval Systems</h1><p class="subtitle">A practical beginner-to-intermediate guide with examples, architectures, and selection advice.</p><div class="author">Concepts &bull; Comparisons &bull; Practical examples &bull; Learning roadmap</div></header>
+<p>A practical beginner-to-intermediate guide with examples, architectures, and selection advice</p>
+<table><thead><tr><th scope="col">What you will learn</th><th scope="col">Practical outcome</th></tr></thead><tbody><tr><td>Core concepts: LLMs, tokens, context windows, embeddings, retrieval</td><td>Understand the vocabulary and how the pieces fit together</td></tr><tr><td>RAG, vector databases, knowledge graphs, Neo4j, GraphRAG</td><td>Know what each technology does and when it is useful</td></tr><tr><td>Common combinations and architectures</td><td>Choose a sensible design for a real application</td></tr><tr><td>Confluence + Salesforce examples</td><td>Apply the ideas to a realistic company knowledge assistant</td></tr><tr><td>Evaluation, security, cost, and a learning roadmap</td><td>Know what to build and test next</td></tr></tbody></table>
+<p>Prepared as a learning guide</p>
+<h2>How to use this guide</h2>
+<p>Read in order the first time. The concepts build on each other. You do not need to learn Neo4j, vector databases, and every framework at once. Start with the problem you want the AI to solve, then choose the simplest retrieval approach that works.</p>
+<table><thead><tr><th scope="col">Part</th><th scope="col">Focus</th></tr></thead><tbody><tr><td>1–2</td><td>LLMs, tokens, context, and why retrieval is needed</td></tr><tr><td>3–6</td><td>RAG, chunking, embeddings, vector search, and reranking</td></tr><tr><td>7–9</td><td>Knowledge graphs, Neo4j, GraphRAG, and combinations</td></tr><tr><td>10–12</td><td>Architectures, practical examples, implementation choices</td></tr><tr><td>13–15</td><td>Evaluation, security, glossary, and learning plan</td></tr></tbody></table>
+<h2>1. The big picture: what problem are we solving?</h2>
+<p>Imagine a company has 128 Confluence pages describing systems, APIs, policies, incidents, owners, and business processes. Together they contain about 1.3 million tokens. A user asks: “Which service owns customer sync, and what breaks if it is unavailable?”</p>
+<p>An LLM is good at understanding and writing language, but it may not know the company’s private or latest information. We need a way to find the right internal information and provide it to the model at answer time. This is the central motivation for retrieval-augmented generation (RAG).</p>
+<table><thead><tr><th scope="col">Component</th><th scope="col">Plain-English meaning</th><th scope="col">Example</th></tr></thead><tbody><tr><td>LLM</td><td>The language model that reasons over input and generates text</td><td>GPT, Claude, Gemini, or another model</td></tr><tr><td>Source data</td><td>The company information the answer should be based on</td><td>Confluence pages, PDFs, Salesforce, BigQuery</td></tr><tr><td>Retrieval</td><td>Finding information relevant to a question</td><td>Find the page about customer sync</td></tr><tr><td>Context</td><td>The information included in the model’s prompt</td><td>Two relevant paragraphs and their page links</td></tr><tr><td>Generation</td><td>The model’s response based on the question and context</td><td>Explain the owner and dependencies</td></tr></tbody></table>
+<h2>2. Essential basics before RAG</h2>
+<h3>2.1 What is an LLM?</h3>
+<p>A Large Language Model (LLM) is an AI model trained to process and generate language. It can summarize, explain, classify, write code, and answer questions. It does not automatically have access to your private Confluence or Salesforce data. An application must provide that data or connect the model to tools.</p>
+<h3>2.2 What is a token?</h3>
+<p>A token is a unit of text used by a model. It can be a word, part of a word, punctuation, or another text unit. Token counts are not the same as word counts. The reported 1.3 million tokens describes the approximate size of the content after tokenization.</p>
+<h3>2.3 What is a context window?</h3>
+<p>The context window is the amount of tokenized input and output a model can handle in a single request. The exact limit depends on the model. The prompt, retrieved content, conversation history, and answer all use tokens. Even if a model can technically accept a huge context, sending every page for every question may cost more, take longer, and make it harder to focus on the most relevant evidence.</p>
+<h3>2.4 What is a prompt?</h3>
+<p>A prompt is the instruction and information given to the model. For example: “Answer only from the context below. If the answer is not supported, say so. Include source links.” RAG supplies relevant source content as part of that prompt.</p>
+<h3>2.5 What is an embedding?</h3>
+<p>An embedding is a list of numbers representing text in a way that captures aspects of its meaning. Texts with similar meaning often have nearby vectors in the embedding space. An embedding model creates these vectors; it is not the same thing as the LLM that writes the final answer.</p>
+<p>Text: “How do I rotate an API credential?”<br>Possible semantically similar text: “Steps for renewing a service token.”</p>
+<p>An embedding-based search can match these even when they do not share the same keywords. Embeddings are useful, but they do not guarantee that two passages are factually equivalent.</p>
+<h2>3. What is RAG?</h2>
+<p>RAG stands for Retrieval-Augmented Generation. It is an application pattern: retrieve relevant information from an external source, augment the prompt with that information, and ask the LLM to generate an answer grounded in it.</p>
+<h3>3.1 The two stages of RAG</h3>
+<table><thead><tr><th scope="col">Stage</th><th scope="col">What happens</th><th scope="col">Typical work</th></tr></thead><tbody><tr><td>A. Prepare / index data (mostly offline)</td><td>Make the source content searchable</td><td>Extract pages, clean content, chunk text, create embeddings, store chunks and metadata</td></tr><tr><td>B. Answer a question (online)</td><td>Retrieve evidence and generate a response</td><td>Interpret question, search, select/rerank results, build prompt, call LLM, return answer and citations</td></tr></tbody></table>
+<h3>3.2 A simple RAG example</h3>
+<ol>
+<li>A Confluence connector reads the pages and keeps the page title, URL, space, owner, and last-updated time.</li>
+<li>The content is split into manageable chunks, often by headings or paragraphs.</li>
+<li>An embedding model creates a vector for each chunk; the vectors and original text are indexed.</li>
+<li>A user asks: “How does the customer sync retry failures?” The system searches for relevant chunks.</li>
+<li>The best chunks, along with source metadata, are included in the LLM prompt.</li>
+<li>The LLM answers using those sources and can cite the Confluence pages.</li>
+</ol>
+<h3>3.3 What RAG is—and is not</h3>
+<ul>
+<li>RAG is not a specific database or model. It is a pattern that can use different search and storage technologies.</li>
+<li>RAG does not train or fine-tune the LLM. It supplies information at inference time.</li>
+<li>RAG does not guarantee correctness. Retrieval can miss evidence, content can be stale, and the model can misinterpret context.</li>
+<li>RAG is not always vector search. Retrieval can use keyword search, SQL/SOQL, graph traversal, metadata filters, or a hybrid of these.</li>
+</ul>
+<h3>3.4 When to use RAG</h3>
+<ul>
+<li>The answer depends on private, internal, changing, or domain-specific documents.</li>
+<li>You want answers grounded in documents with source links.</li>
+<li>The corpus is too large or changes too often to paste into every prompt.</li>
+<li>You need to control which content each user is allowed to retrieve.</li>
+</ul>
+<h2>4. Chunking and indexing</h2>
+<p>Chunking means splitting long content into smaller passages. Search typically works better on focused passages than on one giant page. Chunk size and overlap are design choices, not universal constants.</p>
+<table><thead><tr><th scope="col">Choice</th><th scope="col">Benefit</th><th scope="col">Risk / trade-off</th></tr></thead><tbody><tr><td>Small chunks</td><td>Precise retrieval and less irrelevant text</td><td>May lose context such as definitions or qualifications</td></tr><tr><td>Large chunks</td><td>More surrounding context</td><td>Can be noisy and use more prompt tokens</td></tr><tr><td>Overlap between chunks</td><td>Preserves information near split boundaries</td><td>Duplicates text and increases index size</td></tr><tr><td>Split by headings / sections</td><td>Keeps topic structure and titles</td><td>Requires reasonable source formatting</td></tr></tbody></table>
+<p>Useful metadata includes source URL, page title, section heading, space, updated timestamp, document type, access-control information, and chunk position. Metadata helps filtering, citations, freshness checks, and permissions.</p>
+<p>Indexing is the process of preparing data for search. For a Confluence corpus, indexing may include extraction, cleanup, chunking, embedding generation, and storing the text and metadata.</p>
+<h2>5. Vector databases and semantic search</h2>
+<p>A vector database stores and searches vectors, often alongside the original text and metadata. A query is embedded into a vector; the system finds vectors that are similar to it and returns the corresponding text chunks.</p>
+<h3>5.1 Why use one?</h3>
+<ul>
+<li>Semantic matching: find passages by meaning, not only exact keywords.</li>
+<li>Scale: organize and search many chunks efficiently.</li>
+<li>Metadata filtering: narrow search to a product, team, space, or date when supported.</li>
+<li>Integration: connect retrieval results to a RAG pipeline.</li>
+</ul>
+<h3>5.2 Common options</h3>
+<table><thead><tr><th scope="col">Option</th><th scope="col">What it is</th><th scope="col">Useful when</th></tr></thead><tbody><tr><td>Pinecone</td><td>Managed vector database service</td><td>You want a hosted vector- search service</td></tr><tr><td>Weaviate</td><td>Vector database with search and data features</td><td>You want vector and hybrid search capabilities</td></tr><tr><td>Chroma</td><td>Vector store commonly used in prototypes and applications</td><td>You want to learn or build a smaller prototype</td></tr><tr><td>PostgreSQL + pgvector</td><td>Relational database with vector search support</td><td>You already use PostgreSQL and want fewer separate systems</td></tr><tr><td>OpenSearch / Elasticsearch</td><td>Search engines with keyword and vector capabilities</td><td>Keyword, filters, and semantic search need to coexist</td></tr><tr><td>Neo4j vector index</td><td>Vector search supported within a graph database</td><td>You want vectors and graph relationships in one system</td></tr></tbody></table>
+<p>These products differ in deployment, scale, operations, integrations, cost, and features. The table is a conceptual guide, not a performance ranking.</p>
+<h3>5.3 Vector search is not the same as a vector database</h3>
+<p>Vector search is the retrieval technique. A vector database is one possible system for storing vectors and performing that search. Some relational databases and search engines also support vector search.</p>
+<h2>6. Keyword search, hybrid search, and reranking</h2>
+<h3>6.1 Keyword search</h3>
+<p>Keyword search finds exact terms, phrases, identifiers, and lexical matches. It is often excellent for error codes, API names, field names, ticket IDs, and exact policy wording.</p>
+<h3>6.2 Hybrid search</h3>
+<p>Hybrid search combines keyword retrieval and vector/semantic retrieval. This can work well for technical documentation because users may ask conceptually while the answer contains exact names or identifiers.</p>
+<p>Example question: “Why does POCAccountResource fail with error 401?”<br>Keyword search helps find the exact class and error.<br>Vector search helps find semantically related authentication troubleshooting.<br>Hybrid search combines the candidate results.</p>
+<h3>6.3 Reranking</h3>
+<p>A reranker takes a set of candidate passages and scores which ones best answer the specific question. Retrieval might find 30 candidates; reranking can prioritize the 5–10 most useful. This adds processing and possibly latency, but may improve relevance.</p>
+<table><thead><tr><th scope="col">Technique</th><th scope="col">Best at</th><th scope="col">Limitation</th></tr></thead><tbody><tr><td>Keyword</td><td>Exact terms and identifiers</td><td>Can miss synonyms and paraphrases</td></tr><tr><td>Vector / semantic</td><td>Conceptual similarity and paraphrases</td><td>Can miss exact identifiers or return related-but-not-answering text</td></tr><tr><td>Hybrid</td><td>Combining exact and semantic matches</td><td>Needs tuning and deduplication</td></tr><tr><td>Reranking</td><td>Ordering candidates for a specific question</td><td>Extra model or compute step</td></tr></tbody></table>
+<h2>7. Knowledge graphs</h2>
+<p>A knowledge graph represents entities and the relationships between them. Entities are commonly represented as nodes; relationships are edges. Properties can describe each node or relationship.</p>
+<p class="flow">(:Service {name: "Customer Sync"})<br> -[:OWNED_BY]-&gt; (:Team {name: "CRM Platform"})<br> -[:DEPENDS_ON]-&gt; (:Service {name: "Identity API"})</p>
+<p>This structure explicitly records that Customer Sync is owned by CRM Platform and depends on Identity API. A graph can be traversed to find connected entities and paths.</p>
+<h3>7.1 When a knowledge graph helps</h3>
+<ul>
+<li>Questions depend on relationships across multiple pages or systems.</li>
+<li>You need to trace ownership, dependencies, impact, lineage, or multi-hop connections.</li>
+<li>The same entities appear repeatedly under different names and need to be linked consistently.</li>
+<li>You need to explain how entities connect, not only find a passage that mentions them.</li>
+</ul>
+<h3>7.2 When a graph may be unnecessary</h3>
+<ul>
+<li>The application mostly answers questions directly from a paragraph or policy.</li>
+<li>There are few meaningful relationships to traverse.</li>
+<li>A well-built keyword/vector search already meets quality needs.</li>
+<li>The cost of extracting, validating, and maintaining graph relationships exceeds the benefit.</li>
+</ul>
+<h2>8. Neo4j: what it is</h2>
+<p>Neo4j is a graph database. It stores nodes, relationships, and properties, and supports graph queries using a language called Cypher. Neo4j is not itself an LLM and is not the same thing as RAG.</p>
+<h3>8.1 A practical example</h3>
+<p>Suppose Confluence pages mention a customer-sync service, a Salesforce integration, a service owner, a downstream API, and an incident. A graph model could connect these entities and let the application trace the dependency chain.</p>
+<table><thead><tr><th scope="col">Graph element</th><th scope="col">Example</th></tr></thead><tbody><tr><td>Node / entity</td><td>Service: Customer Sync</td></tr><tr><td>Node / entity</td><td>Team: CRM Platform</td></tr><tr><td>Relationship</td><td>Customer Sync — OWNED_BY → CRM Platform</td></tr><tr><td>Relationship</td><td>Customer Sync — DEPENDS_ON → Identity API</td></tr><tr><td>Property</td><td>Service status, URL, last verified date, source page</td></tr></tbody></table>
+<h3>8.2 What Neo4j can contribute to an AI app</h3>
+<ul>
+<li>Store a knowledge graph and query connected entities.</li>
+<li>Find multi-hop relationships such as service → API → team → incident.</li>
+<li>Support graph-based retrieval and, in supported configurations, vector similarity search.</li>
+<li>Return evidence or subgraphs that an LLM can use to explain an answer.</li>
+</ul>
+<p>Graph data must be created and maintained. It may be extracted from text using an LLM, imported from structured systems, or assembled through a combination. Extracted relationships can be wrong, so validation and source traceability matter.</p>
+<h2>9. GraphRAG</h2>
+<p>GraphRAG refers broadly to approaches that combine retrieval-augmented generation with graph structures. The term is used for more than one implementation. Some systems construct a knowledge graph from a document collection and use graph structure, communities, or summaries for retrieval; others use an existing graph to retrieve relevant connected facts.</p>
+<h3>9.1 How a GraphRAG pipeline can work</h3>
+<ol>
+<li>Extract text from Confluence pages.</li>
+<li>Identify entities and relationships, such as services, teams, APIs, and dependencies.</li>
+<li>Create a graph and retain links back to the source passages.</li>
+<li>At question time, identify relevant entities or graph regions and retrieve connected facts and supporting text.</li>
+<li>Give the evidence to an LLM to synthesize an answer with source references.</li>
+</ol>
+<h3>9.2 GraphRAG versus ordinary RAG</h3>
+<table><thead><tr><th scope="col">Question type</th><th scope="col">Likely useful approach</th></tr></thead><tbody><tr><td>“What does the deployment policy say?”</td><td>Standard RAG over relevant document chunks</td></tr><tr><td>“Which team owns Service X?”</td><td>Keyword/vector RAG may be enough; graph lookup helps if ownership is modeled</td></tr><tr><td>“Which services could be affected if Identity API fails?”</td><td>Graph retrieval can be especially useful</td></tr><tr><td>“Summarize the recurring themes across all engineering pages.”</td><td>A graph/community-summary approach may help; global summarization is a different retrieval challenge</td></tr></tbody></table>
+<p>GraphRAG is not automatically better than standard RAG. Graph construction can be expensive, extraction may introduce errors, and graphs require updates when source documents change. Test it against a simpler baseline.</p>
+<h2>10. Important related terms</h2>
+<table><thead><tr><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Role in a solution</th></tr></thead><tbody><tr><td>Retriever</td><td>Component that finds candidate evidence</td><td>Searches documents, vectors, graphs, or databases</td></tr><tr><td>Embedding model</td><td>Model that maps text to vectors</td><td>Enables semantic similarity search</td></tr><tr><td>Reranker</td><td>Model or algorithm that reorders candidates</td><td>Improves relevance of retrieved evidence</td></tr><tr><td>Knowledge graph</td><td>Entities linked by explicit relationships</td><td>Represents structure and connections</td></tr><tr><td>Graph database</td><td>Database designed to store/query graph structures</td><td>Neo4j is an example</td></tr><tr><td>GraphRAG</td><td>RAG using graph structure in retrieval and/or summarization</td><td>Useful for connected or multi-hop questions</td></tr><tr><td>Long-context LLM</td><td>LLM that accepts a large input context</td><td>Can read more text in one request, within its limit</td></tr><tr><td>Summarization / compression</td><td>Creates a shorter representation of source material</td><td>Reduces prompt size; may omit details</td></tr><tr><td>SQL / SOQL retrieval</td><td>Queries structured tables or Salesforce objects</td><td>Best for exact current fields, filters, and aggregates</td></tr><tr><td>Agent / tool calling</td><td>LLM-driven selection and use of tools</td><td>Can query APIs, databases, search, or take actions</td></tr><tr><td>Fine-tuning</td><td>Further training a model on examples</td><td>Changes behavior or task performance; not the default way to inject current documents</td></tr><tr><td>MCP</td><td>A protocol for connecting AI clients to tools and data sources</td><td>Provides access to capabilities; does not itself mean RAG</td></tr></tbody></table>
+<h2>11. Common architectures and combinations</h2>
+<p>These terms are not mutually exclusive. A real application can combine retrieval methods. Choose based on the questions, source data, quality requirements, freshness, permissions, latency, and operational budget.</p>
+<h3>11.1 Standard RAG + vector database</h3>
+<p class="flow">Confluence → extract/clean → chunk → embed → vector index<br>User question → embed/search → relevant chunks → LLM → answer + citations</p>
+<p>Use when the main job is finding relevant passages in a document collection. This is a sensible baseline for the 128-page Confluence example.</p>
+<h3>11.2 Neo4j + GraphRAG</h3>
+<p class="flow">Confluence → extract entities/relationships → Neo4j graph<br>Question → graph retrieval/traversal → connected facts + source text → LLM</p>
+<p>Use when answers depend on relationships, dependencies, ownership, or multi-hop reasoning. GraphRAG can also include summaries and text retrieval; the exact design varies.</p>
+<h3>11.3 Graph + vector search (hybrid GraphRAG)</h3>
+<p class="flow">Confluence → chunks + embeddings → vector index<br> ↘ entities + relationships → Neo4j<br>Question → semantic retrieval + graph traversal → merge evidence → LLM</p>
+<p>Use when you need both passage-level semantic search and relationship traversal. This can be powerful but adds architecture and maintenance complexity.</p>
+<h3>11.4 Hybrid keyword + vector RAG + reranking</h3>
+<p class="flow">Question → keyword search + vector search → merge/deduplicate → rerank → LLM</p>
+<p>Use for technical knowledge bases with exact identifiers, error codes, and natural- language questions. This is often a strong upgrade before introducing a graph.</p>
+<h3>11.5 SQL/SOQL + RAG</h3>
+<p class="flow">Structured question → SOQL/SQL for current facts<br>Document question → RAG for policies, design docs, and explanations<br>Combine results → LLM → answer</p>
+<p>Use when a system needs both current structured facts and explanations from documents. For example, retrieve an opportunity’s current stage from Salesforce and the relevant sales process from Confluence.</p>
+<h3>11.6 Long context or summarization without a retrieval index</h3>
+<p class="flow">All pages → long-context model, OR pages → summaries → combined context → LLM</p>
+<p>Use for one-off analysis, smaller corpora, or when the task genuinely needs broad coverage of the whole corpus. Repeatedly sending all source content may be expensive; summaries can lose details and should link back to original evidence.</p>
+<h3>11.7 Agent + retrieval tools</h3>
+<p class="flow">User question → agent decides which tool to use<br> → Confluence search / vector search / Neo4j / Salesforce SOQL / BigQuery<br> → gather results → LLM synthesizes response</p>
+<p>Use when questions require multiple steps or different data sources. An agent is an orchestration pattern; it can use RAG, graphs, and structured queries rather than replacing them.</p>
+<h2>12. Worked example: 128 Confluence pages / 1.3 million tokens</h2>
+<p>Goal: Build an assistant that answers questions about internal architecture and processes, with evidence from Confluence.</p>
+<h3>12.1 Recommended first version</h3>
+<ol>
+<li>Extract page content through the Confluence API and retain page IDs, URLs, titles, headings, update timestamps, and access permissions.</li>
+<li>Clean the text and split it into meaningful chunks using headings and paragraph boundaries. Tune chunk size on a test set rather than choosing a universal number.</li>
+<li>Index the chunks using keyword search and/or embeddings. A vector-capable search system is one option; it is not mandatory to use a dedicated vector database.</li>
+<li>At query time, apply permission filters, retrieve candidate passages, optionally rerank them, and select a limited set of evidence.</li>
+<li>Prompt the LLM to answer from the evidence, acknowledge gaps, and cite page URLs and titles.</li>
+<li>Evaluate with real questions and expected sources; monitor stale pages, retrieval misses, access-control leaks, latency, and cost.</li>
+</ol>
+<h3>12.2 Add Neo4j only if the questions justify it</h3>
+<p>If users frequently ask “what depends on this?”, “which team owns these connected services?”, or “what is the impact across systems?”, build a graph of services, teams, APIs, incidents, and dependencies. Preserve links from graph facts to source passages. Compare graph-assisted retrieval with the standard RAG baseline.</p>
+<h3>12.3 Example answer flow</h3>
+<table><thead><tr><th scope="col">User asks</th><th scope="col">Retrieval plan</th><th scope="col">Why</th></tr></thead><tbody><tr><td>“What is the retry policy?”</td><td>Keyword/vector retrieval over policy pages</td><td>The answer likely exists in a few passages</td></tr><tr><td>“Which API owns this field?”</td><td>Search docs; possibly query Salesforce metadata or a graph</td><td>May require an exact identifier and ownership relationship</td></tr><tr><td>“What breaks if Identity API is down?”</td><td>Graph traversal plus source passages</td><td>Requires connected dependency paths</td></tr><tr><td>“What changed in the policy last month?”</td><td>Metadata/date filters and version/change history</td><td>Freshness and change records matter</td></tr><tr><td>“What is the current opportunity amount?”</td><td>Salesforce SOQL or trusted data API</td><td>Current structured data should be queried directly</td></tr></tbody></table>
+<h2>13. Choosing the right approach</h2>
+<table><thead><tr><th scope="col">Need</th><th scope="col">Start with</th><th scope="col">Consider adding</th></tr></thead><tbody><tr><td>Q&amp;A over company documents</td><td>Standard RAG with keyword/vector retrieval</td><td>Hybrid search, reranking, citations</td></tr><tr><td>Exact technical names and error messages</td><td>Keyword + vector hybrid search</td><td>Reranking and metadata filters</td></tr><tr><td>Relationships and dependency impact</td><td>Knowledge graph / graph retrieval</td><td>Neo4j + GraphRAG</td></tr><tr><td>Current CRM records and metrics</td><td>SOQL/SQL or a trusted API</td><td>RAG for related explanatory documents</td></tr><tr><td>One-time review of a manageable corpus</td><td>Long-context model or summarization</td><td>RAG if repeated questions or traceability are needed</td></tr><tr><td>Multi-step question across many tools</td><td>A controlled tool-calling workflow</td><td>Agent orchestration with RAG/SQL/graph tools</td></tr></tbody></table>
+<p>Rule of thumb: begin with the simplest design that can pass your evaluation set. Add a vector index, graph, reranker, or agent only when it solves a demonstrated failure or requirement.</p>
+<h2>14. Evaluation, security, and production considerations</h2>
+<h3>14.1 Evaluate more than the final answer</h3>
+<ul>
+<li>Retrieval quality: did the system retrieve the pages that actually contain the answer?</li>
+<li>Grounding: is each important claim supported by retrieved evidence?</li>
+<li>Citation accuracy: do the links point to the correct source and relevant section?</li>
+<li>Completeness: did the answer include important caveats or related dependencies?</li>
+<li>Freshness: does the index reflect changed or deleted Confluence pages?</li>
+<li>Latency and cost: how many retrieval calls, model calls, and input tokens are required?</li>
+<li>Permission safety: can a user retrieve content they are not authorized to see?</li>
+</ul>
+<h3>14.2 Security matters</h3>
+<p>A RAG index must preserve source permissions. Do not assume that because a service account can read every Confluence page, every end user should be able to search every page. Enforce access controls at retrieval time and protect logs, embeddings, cached results, and source text. Treat retrieved document content as data, not as trusted instructions; a page can contain malicious or irrelevant prompt-like text.</p>
+<h3>14.3 Keep the index current</h3>
+<p>Use incremental synchronization where possible. Track page IDs, versions, timestamps, and deletions. Reprocess changed content and remove stale chunks. For graph systems, update or remove relationships when source evidence changes. For every extracted graph fact, retain provenance so it can be checked.</p>
+<h3>14.4 Avoid common mistakes</h3>
+<ul>
+<li>Sending every document to the LLM for every question without checking cost or need.</li>
+<li>Assuming vector similarity means the passage answers the question.</li>
+<li>Adding Neo4j or an agent before proving a simple retrieval baseline is insufficient.</li>
+<li>Creating chunks without retaining source URLs, headings, permissions, or timestamps.</li>
+<li>Treating an LLM-extracted graph relationship as certainly true without validation.</li>
+<li>Measuring only whether the answer sounds good instead of checking evidence and citations.</li>
+</ul>
+<h2>15. Learning roadmap</h2>
+<table><thead><tr><th scope="col">Step</th><th scope="col">Learn / build</th><th scope="col">Success criterion</th></tr></thead><tbody><tr><td>1. Foundations</td><td>LLM, tokens, context window, prompt, embeddings</td><td>Explain the difference without mixing up model and database</td></tr><tr><td>2. Basic retrieval</td><td>Index a few pages and run keyword search</td><td>Find the right source for a question</td></tr><tr><td>3. Vector RAG</td><td>Chunk, embed, store, retrieve, generate</td><td>Answer questions with useful citations</td></tr><tr><td>4. Improve retrieval</td><td>Hybrid search, metadata filters, reranking</td><td>Reduce missed evidence and irrelevant chunks</td></tr><tr><td>5. Measure quality</td><td>Create 20–50 representative questions with expected sources</td><td>Compare retrieval and answer quality before/after changes</td></tr><tr><td>6. Knowledge graphs</td><td>Model entities and relationships; learn basic Cypher if using Neo4j</td><td>Answer a multi-hop dependency question</td></tr><tr><td>7. GraphRAG</td><td>Combine graph retrieval with source passages</td><td>Show measurable improvement on graph-shaped questions</td></tr><tr><td>8. Production</td><td>Permissions, sync, monitoring, latency, cost, evaluations</td><td>Operate safely and detect regressions</td></tr></tbody></table>
+<h3>Suggested hands-on mini-project</h3>
+<p>Build a Confluence Q&amp;A prototype in phases. Start with 5–10 pages, then scale to all 128. Create a small evaluation set of real questions and source pages. Compare (A) keyword search, (B) vector RAG, (C) hybrid search with reranking, and only then (D) graph-assisted retrieval for questions involving dependencies. Record answer quality, citation correctness, latency, and cost for each approach.</p>
+<h2>16. Glossary</h2>
+<table><thead><tr><th scope="col">Term</th><th scope="col">Short definition</th></tr></thead><tbody><tr><td>RAG</td><td>Retrieve external information, add it to the prompt, and generate an answer.</td></tr><tr><td>LLM</td><td>Language model that processes and generates text.</td></tr><tr><td>Token</td><td>Unit used to represent text inside a model.</td></tr><tr><td>Context window</td><td>Maximum input/output token capacity for a model request.</td></tr><tr><td>Embedding</td><td>Vector representation of text or another item.</td></tr><tr><td>Vector database</td><td>System for storing and searching vectors, often with text and metadata.</td></tr><tr><td>Chunk</td><td>A smaller piece of a source document.</td></tr><tr><td>Retriever</td><td>Component that finds candidate evidence.</td></tr><tr><td>Reranker</td><td>Component that reorders candidate evidence by relevance.</td></tr><tr><td>Hybrid search</td><td>Combination of keyword and semantic/vector search.</td></tr><tr><td>Knowledge graph</td><td>Entities connected by explicit relationships.</td></tr><tr><td>Neo4j</td><td>Graph database with nodes, relationships, properties, and Cypher queries.</td></tr><tr><td>GraphRAG</td><td>RAG approach that uses graph structures for retrieval and/or summaries.</td></tr><tr><td>Provenance</td><td>Information showing where a fact came from.</td></tr><tr><td>Grounding</td><td>Basing an answer on evidence rather than unsupported claims.</td></tr><tr><td>Fine-tuning</td><td>Further training a model to improve or change behavior.</td></tr><tr><td>Tool calling</td><td>A model requests that an application execute a defined tool or API.</td></tr><tr><td>Agent</td><td>An application pattern where a model selects steps/tools to pursue a task.</td></tr><tr><td>MCP</td><td>A protocol for connecting AI clients to tools and data sources.</td></tr><tr><td>SOQL / SQL</td><td>Query languages for structured Salesforce / relational data.</td></tr></tbody></table>
+<h2>Final takeaways</h2>
+<ul>
+<li>RAG is the overall pattern, not one product.</li>
+<li>A vector database helps find semantically similar text; it does not itself write the answer.</li>
+<li>Neo4j stores and queries relationships; GraphRAG uses graph structure to improve retrieval and reasoning over connected information.</li>
+<li>Standard RAG + vector or hybrid search is a sensible starting point for Confluence document Q&amp;A.</li>
+<li>Combine vector retrieval, graphs, SQL/SOQL, summarization, and agents only when the question types and measured results justify them.</li>
+<li>For the 128-page / 1.3-million-token case, the token count alone cannot reveal which architecture was used. Look for clues such as “embeddings/top-k,” “nodes/edges/Cypher,” or “summaries/context compression.”</li>
+</ul>
+<footer>Kalpana Reddy &middot; learn.pgmaaya.com &middot; Personal study notes; verify important details against original documentation.</footer>
+</body></html>

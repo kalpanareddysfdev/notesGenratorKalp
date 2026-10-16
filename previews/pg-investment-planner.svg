@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <rect width="640" height="400" fill="#eaf3f4"/>
+  <circle cx="80" cy="320" r="140" fill="#d9ebed"/>
+  <rect x="55" y="45" width="530" height="310" rx="16" fill="#fff" stroke="#c9dfe3" stroke-width="2"/>
+  <text x="80" y="80" fill="#346771" font-family="sans-serif" font-size="13" font-weight="700">PG INVESTMENT PLANNER</text>
+  <rect x="80" y="105" width="180" height="223" rx="9" fill="#edf5f6"/>
+  <path d="m104 160 65-39 65 39v141H104z" fill="#b4d1d8"/>
+  <g fill="#fff"><path d="M123 169h28v31h-28zM184 169h28v31h-28zM123 218h28v31h-28zM184 218h28v31h-28z"/></g>
+  <path d="M156 267h27v34h-27z" fill="#4c8393"/>
+  <g fill="#eaf0ff"><rect x="285" y="105" width="130" height="66" rx="7"/><rect x="430" y="105" width="130" height="66" rx="7"/></g>
+  <g fill="#526480" font-family="sans-serif" font-size="11"><text x="300" y="130">Occupancy</text><text x="445" y="130">Cash flow</text></g>
+  <g fill="#245bd7" font-family="sans-serif" font-size="15" font-weight="700"><text x="300" y="153">Your assumptions</text><text x="445" y="153">Your scenarios</text></g>
+  <path d="M286 297h274" stroke="#dce6f5"/>
+  <g fill="#9ab8f0"><rect x="300" y="253" width="26" height="44" rx="3"/><rect x="350" y="233" width="26" height="64" rx="3"/><rect x="400" y="243" width="26" height="54" rx="3"/><rect x="450" y="212" width="26" height="85" rx="3"/><rect x="500" y="195" width="26" height="102" rx="3"/></g>
+  <path d="m312 235 51-24 49 8 51-28 50-15" fill="none" stroke="#346771" stroke-width="3"/>
+  <text x="300" y="321" fill="#526480" font-family="sans-serif" font-size="10">Illustrative dashboard · not financial advice</text>
+</svg>

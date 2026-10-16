@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#312e81"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+  <rect width="640" height="400" fill="url(#bg)"/>
+  <circle cx="600" cy="360" r="190" fill="#ffffff08"/>
+  <circle cx="50" cy="20" r="140" fill="#ffffff08"/>
+  <g transform="translate(50 87) scale(.21)">
+    <rect width="512" height="512" rx="112" fill="#4f46e5" stroke="#ffffff40" stroke-width="5"/>
+    <clipPath id="h"><rect width="512" height="300"/></clipPath>
+    <circle cx="256" cy="230" r="96" fill="#fbbf24" clip-path="url(#h)"/>
+    <path d="M256 86V56M146 130l-22-22M366 130l22-22M108 230H78M404 230h30" stroke="#fbbf24" stroke-width="22" stroke-linecap="round"/>
+    <path d="m170 330 60 60 120-120" fill="none" stroke="#fff" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="50" y="241" fill="white" font-family="sans-serif" font-size="39" font-weight="700">DayDone</text>
+  <text x="50" y="270" fill="#e0e7ff" font-family="sans-serif" font-size="15">Small actions. Meaningful progress.</text>
+  <rect x="330" y="55" width="260" height="290" rx="18" fill="white"/>
+  <text x="353" y="91" fill="#312e81" font-family="sans-serif" font-size="19" font-weight="700">A day, with intention.</text>
+  <text x="353" y="113" fill="#64748b" font-family="sans-serif" font-size="11">Habits, meals, and goals in one place</text>
+  <g fill="#eef2ff"><rect x="350" y="137" width="220" height="47" rx="9"/><rect x="350" y="195" width="220" height="47" rx="9"/><rect x="350" y="253" width="220" height="47" rx="9"/></g>
+  <g fill="none" stroke="#4f46e5" stroke-width="2"><rect x="365" y="152" width="16" height="16" rx="4"/><path d="m368 160 4 4 6-8"/><rect x="365" y="210" width="16" height="16" rx="4"/><rect x="365" y="268" width="16" height="16" rx="4"/></g>
+  <g fill="#334155" font-family="sans-serif" font-size="12"><text x="394" y="164">Build a daily habit</text><text x="394" y="222">Plan a nourishing meal</text><text x="394" y="280">Take a step toward a goal</text></g>
+  <text x="353" y="325" fill="#64748b" font-family="sans-serif" font-size="10">Illustration of the planning workflow</text>
+</svg>
