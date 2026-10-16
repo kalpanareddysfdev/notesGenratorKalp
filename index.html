@@ -679,12 +679,12 @@
         const grid = document.getElementById('itemsGrid');
         const emptyEl = document.getElementById('emptyState');
 
-        // Filter out system files, hidden files, hub pages, and the index
+        // Filter out system files, hidden files, hub pages, the index, and Markdown files
         const validFiles = files.filter(f => {
           if (f.type !== 'file') return false;
           const name = f.name.toLowerCase();
           if (name.startsWith('.') || ['cname', 'index.html', 'about.html', 'contact.html', 'privacy.html'].includes(name)) return false;
-          return name.endsWith('.html') || name.endsWith('.pdf') || name.endsWith('.doc') || name.endsWith('.docx') || name.endsWith('.md');
+          return name.endsWith('.html') || name.endsWith('.pdf') || name.endsWith('.doc') || name.endsWith('.docx');
         });
 
         if (validFiles.length === 0) return;
@@ -697,7 +697,6 @@
           const lowerName = name.toLowerCase();
           const isHtml = lowerName.endsWith('.html');
           const isPdf = lowerName.endsWith('.pdf');
-          const isMd = lowerName.endsWith('.md');
           const isDoc = lowerName.endsWith('.doc') || lowerName.endsWith('.docx');
 
           const category = isHtml ? 'apps' : 'docs';
@@ -706,7 +705,7 @@
 
           const meta = KNOWN_METADATA[name] || {};
           const title = meta.title || formatTitle(name);
-          const icon = meta.icon || (isHtml ? '⚡' : isPdf ? '📄' : isMd ? '📘' : '📝');
+          const icon = meta.icon || (isHtml ? '⚡' : isPdf ? '📄' : '📝');
           const tagClass = isHtml ? 'tag-app' : 'tag-pdf';
           const badge = meta.badge || (isHtml ? 'Interactive Tool' : isPdf ? 'PDF Document' : 'Document');
           const actionText = meta.action || (isHtml ? 'Launch App &rarr;' : 'Open Document &rarr;');
@@ -762,7 +761,7 @@
         let itemType = 'docs';
         if (href.endsWith('.html') || href.includes('.html')) {
           itemType = 'apps';
-        } else if (href.endsWith('.pdf') || href.endsWith('.doc') || href.endsWith('.docx') || href.endsWith('.md')) {
+        } else if (href.endsWith('.pdf') || href.endsWith('.doc') || href.endsWith('.docx')) {
           itemType = 'docs';
         } else {
           itemType = card.getAttribute('data-category') || 'apps';
