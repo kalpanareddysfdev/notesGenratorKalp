@@ -42,9 +42,9 @@ function setTheme(theme) {
 }
 
 try {
-  setTheme(localStorage.getItem('hub-theme') === 'dark' ? 'dark' : 'light');
+  setTheme(localStorage.getItem('hub-theme') === 'light' ? 'light' : 'dark');
 } catch (error) {
-  console.warn('Theme preferences could not be read; using the default light theme.', error);
+  console.warn('Theme preferences could not be read; using the default dark theme.', error);
 }
 
 themeToggle.addEventListener('click', () => {

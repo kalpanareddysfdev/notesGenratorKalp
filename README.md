@@ -12,6 +12,7 @@ The home page introduces Kalpana Reddy, Salesforce Tech Lead at Thoughtworks and
 - [kalpana-avatar.jpg](./kalpana-avatar.jpg) is the supplied anime avatar used in the hero profile; [kalpana-avatar-small.jpg](./kalpana-avatar-small.jpg) is its lightweight header version. Document previews continue to show their own content.
 - [social-icons.svg](./social-icons.svg) supplies shared icons for the contact cards and LinkedIn community badge. The displayed LinkedIn count of 3K followers was provided by Kalpana; it is not a live API count.
 - [portfolio.js](./portfolio.js) handles search, category filters, theme preferences, and discovery of new resources from the public repository.
+- The portfolio defaults to dark mode for new visitors; a visitor's saved light/dark choice takes precedence.
 - Topic filters combine with categories and text search. Counts reflect the resources actually available, including discovered additions.
 - The curated library includes three tools and seven PDFs. [DayDone](https://daydone.pgmaaya.com/) is an externally hosted, installable daily planner for habits, meals, goals, and insights. Its card describes device-local storage and backup requirements; its source project remains separate from this portfolio.
 - The contact form opens a pre-filled email draft in the visitor's mail app; it does not submit to a backend, store messages, or claim delivery. The tools and PDF links use the real existing files, not the demo modals from the reference design.
