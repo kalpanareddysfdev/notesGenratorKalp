@@ -1,0 +1,840 @@
+{
+  "topic": "Git Basics",
+  "level": "Beginner to Intermediate",
+  "checked_on": "2026-10-16",
+  "footer_name": "Git Basics - Quick Notes",
+  "theme": {
+    "accent": "#f05032",
+    "logo_text": "GIT",
+    "logo_sub": "VCS Basics"
+  },
+  "cover": {
+    "headline": "GIT",
+    "kicker": "(Version Control Basics)",
+    "subhead": "QUICK NOTES",
+    "center": "GIT VCS",
+    "tagline": "Beginner to Intermediate",
+    "words": ["Snapshot", "Stage", "Commit", "Branch"],
+    "nodes": [
+      { "label": "Working\nTree", "color": "orange", "edge": "add" },
+      { "label": "Staging\nIndex", "color": "purple", "edge": "commit" },
+      { "label": "Local\nRepo", "color": "green", "edge": "push" },
+      { "label": "Remote\nGitHub", "color": "blue", "edge": "fetch" },
+      { "label": "Branches\n& Merging", "color": "teal" },
+      { "label": "Undo &\nHistory", "color": "red" }
+    ]
+  },
+  "roadmap": {
+    "subtitle": "4-page rapid mastery of Git core mental models, branching, and collaboration",
+    "how_to_use": [
+      "Page 3 sets the **3-stage architecture** — master Working Tree, Index & Repo before memorising commands.",
+      "Page 4 covers **branching, pointers & merging** — how `switch` & `restore` cleanly replace legacy `checkout`.",
+      "Page 5 covers **syncing with remotes** — the mechanics of `fetch`, `pull`, `push`, and resolving merge conflicts.",
+      "Page 6 is your **cheat sheet & interview guide** — 12 mini-guides, 10 questions, and the ultimate Git formula.",
+      "Do the sample commands yourself in a sandbox directory to build muscle memory."
+    ],
+    "mindset": [
+      "Git does not store diffs; it stores full **snapshots** of your project on every commit.",
+      "Commits form a **Directed Acyclic Graph (DAG)** where each node points back to parent commits.",
+      "Nearly every operation is **local-first**; network latency only matters during `fetch`, `pull`, and `push`.",
+      "Git rarely deletes data. If you lose work, `git reflog` can usually rescue orphaned commits."
+    ],
+    "tools": [
+      "**Git CLI:** Version 2.23+ recommended to use `switch` & `restore` syntax.",
+      "**Terminal Shell:** zsh or bash with Git branch auto-completion enabled.",
+      "**Hosting Platform:** GitHub, GitLab, or Bitbucket for remote collaboration.",
+      "**Visual DAG Viewers:** Built-in `git log --graph --oneline` or VS Code Git Graph extension.",
+      "**Productivity Aliases:** Setup `git config --global alias.st status` and `alias.co checkout`."
+    ],
+    "diagram_title": "Core Learning Pathway",
+    "diagram": {
+      "type": "chain",
+      "labels": ["Working\nTree", "Staging\nIndex", "Local\nRepo", "Remote\nGitHub"],
+      "colors": ["orange", "purple", "green", "blue"],
+      "arrows": ["add", "commit", "push"],
+      "return": "pull / fetch & merge",
+      "h": 46,
+      "gap": 16
+    },
+    "note_title": "Modern Git Standards",
+    "note": [
+      "**Default Branch:** Now `main` instead of `master` (`git config --global init.defaultBranch main`).",
+      "**Replaced checkout:** Modern Git uses `git switch` (branch navigation) and `git restore` (undoing changes).",
+      "**Atomic Commits:** Make small, focused commits with imperative messages (e.g. `feat: add user auth`).",
+      "**Never Rebase Public Branches:** Only rebase local unpublished branches to avoid rewriting shared history."
+    ]
+  },
+  "pages": [
+    {
+      "title": "The Three Trees: Work, Stage & Commit",
+      "subtitle": "Understanding how Git moves changes through working directory, index, and repository",
+      "rows": [
+        {
+          "type": "cols",
+          "ratio": "1fr 1fr",
+          "flex": "1 1 auto",
+          "left": [
+            {
+              "n": 1,
+              "title": "What is Git?",
+              "color": "blue",
+              "blocks": [
+                {
+                  "ul": [
+                    "**Distributed VCS:** Every developer clone holds the entire project history and complete object graph locally on disk.",
+                    "**Snapshot Model:** Unlike legacy VCS tracking diff deltas, Git captures immutable **snapshots** of the directory tree.",
+                    "**Cryptographic Integrity:** Every object is content-addressed by a 40-character SHA hash, preventing silent corruption."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": 2,
+              "title": "The Three Areas",
+              "color": "green",
+              "blocks": [
+                {
+                  "ul": [
+                    "**Working Directory:** Local sandbox files you edit directly in your code editor.",
+                    "**Staging Area (Index):** Binary cache (`.git/index`) preparing the exact snapshot for commit.",
+                    "**Repository (.git):** Permanent object database storing verified snapshots & history graph."
+                  ]
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "n": 3,
+              "title": "The Lifecycle Flow",
+              "color": "orange",
+              "blocks": [
+                {
+                  "diagram": {
+                    "type": "chain",
+                    "labels": ["Working\nDirectory", "Staging\nIndex", "Local\nRepository"],
+                    "colors": ["orange", "purple", "green"],
+                    "arrows": ["git add", "git commit"],
+                    "return": "git restore / checkout",
+                    "h": 40,
+                    "gap": 14
+                  }
+                }
+              ]
+            },
+            {
+              "n": 4,
+              "title": "Behind the Scenes (.git object store)",
+              "color": "yellow",
+              "blocks": [
+                {
+                  "ul": [
+                    "**Blob:** Compressed raw file content (stores zero filenames or permissions).",
+                    "**Tree:** Represents a directory; maps filenames & modes to child blob/tree SHAs.",
+                    "**Commit:** Points to root tree SHA, parent commit(s), author, timestamp, and message.",
+                    "**Annotated Tag:** Permanent named reference pointing directly to a specific commit."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cols",
+          "ratio": "1fr 1fr",
+          "flex": "0.95 1 auto",
+          "left": [
+            {
+              "n": 5,
+              "title": "Core Staging Commands",
+              "color": "purple",
+              "blocks": [
+                {
+                  "table": {
+                    "head": ["Command", "Action", "Target Area"],
+                    "rows": [
+                      ["git init", "Create new local repository", ".git folder"],
+                      ["git status", "Check modified vs staged files", "Work vs Index"],
+                      ["git add <file>", "Stage specific file for commit", "Index buffer"],
+                      ["git add -p", "Interactively stage hunks (patches)", "Index buffer"],
+                      ["git diff", "View unstaged changes vs Index", "Workdir diff"],
+                      ["git commit -m", "Record snapshot into history", "Repository"]
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "n": 6,
+              "title": "The File States & Lifecycle",
+              "color": "teal",
+              "blocks": [
+                {
+                  "table": {
+                    "head": ["State", "Meaning", "Next Action"],
+                    "rows": [
+                      ["Untracked", "New file not yet registered in Git", "git add <file>"],
+                      ["Unmodified", "File matches last commit snapshot", "Edit file"],
+                      ["Modified", "Edited in workdir, not yet staged", "git add / restore"],
+                      ["Staged", "Indexed buffer ready for commit", "git commit"],
+                      ["Ignored", "Matches rule in .gitignore file", "Skipped by Git"]
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cols",
+          "ratio": "1fr 1fr",
+          "flex": "1.05 1 auto",
+          "left": [
+            {
+              "n": 7,
+              "title": "First Commit Walkthrough",
+              "color": "teal",
+              "blocks": [
+                {
+                  "code": "# 1. Initialize repository and create file\ngit init my-project && cd my-project\necho \"# Git Study Notes\" > README.md\n# 2. Stage file to Index and record snapshot\ngit add README.md\ngit commit -m \"feat: initial commit\"",
+                  "label": "Terminal workflow"
+                },
+                {
+                  "out": "[main (root-commit) 4a9b1c2] feat: initial commit\n 1 file changed, 1 insertion(+)\n create mode 100644 README.md",
+                  "label": "Sample terminal output"
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "n": 8,
+              "title": "Common Mistakes & Fixes",
+              "color": "red",
+              "blocks": [
+                {
+                  "ul": [
+                    "Editing files and forgetting to stage. Fix: Check `git status` before running commit.",
+                    "Committing secrets, .env, or node_modules. Fix: Add patterns to `.gitignore` before initial add.",
+                    "Vague commit messages like 'fixed stuff'. Fix: Write clear imperative summaries like `feat: add user login`.",
+                    "Accidentally staged the wrong file. Fix: Run `git restore --staged <file>` to unstage without losing edits."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "full",
+          "boxes": [
+            {
+              "n": 9,
+              "title": "Remember",
+              "color": "blue",
+              "blocks": [
+                {
+                  "remember": "Edit in Working Tree, Buffer in Staging Index, Save permanently in Repository Snapshot."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "footer": [
+        { "kind": "use", "text": "Atomic commits allow easy rollbacks, clear code reviews, and clean bisecting when bugs arise." },
+        { "kind": "interview", "text": "Q: What is the Staging Area? A: An intermediate buffer allowing selective, atomic commits." },
+        { "kind": "pro", "text": "Use `git add -p` (patch mode) to review and stage specific chunks of code interactively." }
+      ]
+    },
+    {
+      "title": "Branching, Merging & Moving HEAD",
+      "subtitle": "How Git tracks divergent lines of development with lightweight movable pointers",
+      "rows": [
+        {
+          "type": "cols",
+          "ratio": "1fr 1fr",
+          "flex": "1 1 auto",
+          "left": [
+            {
+              "n": 1,
+              "title": "What is a Branch & HEAD?",
+              "color": "blue",
+              "blocks": [
+                {
+                  "ul": [
+                    "**Pointer Model:** A branch is simply a lightweight 41-byte text file storing a 40-hex commit hash (`.git/refs/heads/<name>`).",
+                    "**Zero Overhead:** Creating or switching branches is instant; zero files are duplicated.",
+                    "**HEAD Cursor:** References whichever branch or commit is currently checked out (`.git/HEAD`).",
+                    "**Auto-Advance:** When you commit, Git automatically advances the current branch pointer."
+                  ]
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "n": 2,
+              "title": "Branch Topology & Pointer Flow",
+              "color": "orange",
+              "blocks": [
+                {
+                  "diagram": {
+                    "type": "flow",
+                    "cell_h": 46,
+                    "nodes": [
+                      { "id": "c1", "label": "C1 (base)", "col": 0, "row": 0 },
+                      { "id": "c2", "label": "C2 (main)", "col": 1, "row": 0 },
+                      { "id": "f1", "label": "F1 (feat)", "col": 1, "row": 1, "color": "teal" },
+                      { "id": "m1", "label": "M1 (merge)", "col": 2, "row": 0, "color": "green" }
+                    ],
+                    "edges": [
+                      { "from": "c1", "to": "c2" },
+                      { "from": "c1", "to": "f1", "route": "vh" },
+                      { "from": "c2", "to": "m1" },
+                      { "from": "f1", "to": "m1", "route": "hv" }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cols",
+          "ratio": "1fr 1fr",
+          "flex": "1 1 auto",
+          "left": [
+            {
+              "n": 3,
+              "title": "Modern Navigation (Git 2.23+)",
+              "color": "purple",
+              "blocks": [
+                {
+                  "table": {
+                    "head": ["Task", "Modern Command", "Legacy Form"],
+                    "rows": [
+                      ["Switch branch", "git switch <name>", "git checkout <name>"],
+                      ["Create & switch", "git switch -c <name>", "git checkout -b <name>"],
+                      ["Discard work edits", "git restore <file>", "git checkout -- <file>"],
+                      ["Unstage a file", "git restore --staged <f>", "git reset HEAD <file>"],
+                      ["List all branches", "git branch -av", "git branch -a"]
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "n": 4,
+              "title": "Merge Strategies Compared",
+              "color": "green",
+              "blocks": [
+                {
+                  "table": {
+                    "head": ["Strategy", "Behavior", "History Impact"],
+                    "rows": [
+                      ["Fast-Forward", "Moves branch label forward", "Zero extra commits"],
+                      ["3-Way Merge", "Combines 2 divergent heads", "Preserves merge commit"],
+                      ["Rebase", "Replays commits on top of base", "Linear clean graph"],
+                      ["Squash Merge", "Condenses branch into 1 commit", "Single clean commit"]
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cols",
+          "ratio": "1.05fr 0.95fr",
+          "flex": "1.15 1 auto",
+          "left": [
+            {
+              "n": 5,
+              "title": "Feature Branch Workflow",
+              "color": "teal",
+              "blocks": [
+                {
+                  "code": "# 1. Create and isolate feature branch\ngit switch -c feature/auth-token\n# ... edit files and commit ...\ngit commit -am \"feat: add login token validation\"\n# 2. Switch back and integrate into main\ngit switch main\ngit merge --no-ff feature/auth-token",
+                  "label": "Branch & Merge Workflow"
+                },
+                {
+                  "out": "Merge made by the 'ort' strategy.\n auth.py | 24 +++++++++++++++++++++---\n 1 file changed, 21 insertions(+), 3 deletions(-)",
+                  "label": "3-way merge output"
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "n": 6,
+              "title": "Saving Work with Stash",
+              "color": "yellow",
+              "blocks": [
+                {
+                  "ul": [
+                    "**`git stash -u`:** Shelves dirty changes (including untracked files).",
+                    "**`git stash pop`:** Re-applies the most recent stash and deletes it.",
+                    "**`git stash list`:** Inspects all saved stash entries across branches.",
+                    "**`git stash drop`:** Permanently discards a specific saved stash state."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": 7,
+              "title": "Common Traps & Fixes",
+              "color": "red",
+              "blocks": [
+                {
+                  "ul": [
+                    "Detached HEAD state. Fix: Run `git switch main`.",
+                    "Rebasing shared branches. Fix: Never rebase commits pushed to remote.",
+                    "Branch switch blocked. Fix: Run `git stash`, switch, then `git stash pop`.",
+                    "Wrong branch commit. Fix: `git cherry-pick <hash>` on target, then reset."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "full",
+          "boxes": [
+            {
+              "n": 8,
+              "title": "Remember",
+              "color": "blue",
+              "blocks": [
+                {
+                  "remember": "Branches are 41-byte pointers; HEAD is where you stand. Switch cleanly with git switch."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "footer": [
+        { "kind": "use", "text": "Feature branches isolate experimental code without touching stable production main." },
+        { "kind": "interview", "text": "Q: Git Merge vs Rebase? A: Merge preserves historical context; rebase rewrites linear history." },
+        { "kind": "pro", "text": "Run `git log --oneline --graph --all` to view your branch topology in the terminal." }
+      ]
+    },
+    {
+      "title": "Remotes, Syncing & Resolving Conflicts",
+      "subtitle": "Connecting to remote repositories, sharing commits, and resolving merge conflicts",
+      "rows": [
+        {
+          "type": "cols",
+          "ratio": "1fr 1fr",
+          "flex": "1 1 auto",
+          "left": [
+            {
+              "n": 1,
+              "title": "What is a Remote?",
+              "color": "blue",
+              "blocks": [
+                {
+                  "ul": [
+                    "**Remote Server:** A repository hosted on a network or cloud platform (GitHub, GitLab, Bitbucket).",
+                    "**Origin Convention:** Git automatically names the default upstream remote **`origin`** (`.git/config`).",
+                    "**Tracking Branches:** References like `origin/main` are read-only local caches of remote state.",
+                    "**Offline-First:** All commit and diff operations occur offline; network sync is explicit."
+                  ]
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "n": 2,
+              "title": "Local vs Remote Sync Flow",
+              "color": "orange",
+              "blocks": [
+                {
+                  "diagram": {
+                    "type": "sequence",
+                    "actors": ["Local Workdir", "Local Repo (.git)", "Remote (origin)"],
+                    "messages": [
+                      { "from": 0, "to": 1, "label": "1. git commit" },
+                      { "from": 1, "to": 2, "label": "2. git push" },
+                      { "from": 2, "to": 1, "label": "3. git fetch", "dashed": true },
+                      { "from": 1, "to": 0, "label": "4. git merge", "dashed": true }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cols",
+          "ratio": "1fr 1fr",
+          "flex": "1 1 auto",
+          "left": [
+            {
+              "n": 3,
+              "title": "Syncing Commands",
+              "color": "purple",
+              "blocks": [
+                {
+                  "table": {
+                    "head": ["Command", "What it does", "Affects Workdir?"],
+                    "rows": [
+                      ["git fetch", "Downloads remote commits & refs", "No (100% safe)"],
+                      ["git merge origin/main", "Merges fetched branch into local", "Yes"],
+                      ["git pull", "fetch + merge combined in 1 step", "Yes"],
+                      ["git pull --rebase", "fetch + rebase local atop remote", "Yes (clean graph)"],
+                      ["git push -u origin main", "Uploads commits and sets upstream", "No"]
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "n": 4,
+              "title": "When Conflicts Happen",
+              "color": "yellow",
+              "blocks": [
+                {
+                  "ul": [
+                    "**Divergent Edits:** Occurs when two branches edit the exact same lines, or one deletes an edited file.",
+                    "**Automatic Pause:** Git halts the merge and injects markers into affected files in the workdir.",
+                    "**Conflict Markers:** `<<<<<<< HEAD` (your code), `=======` (divider), and `>>>>>>>` (incoming code).",
+                    "**Resolution Flow:** Choose desired lines, remove markers, stage with `git add`, and finalize with `commit`."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cols",
+          "ratio": "1.05fr 0.95fr",
+          "flex": "1.15 1 auto",
+          "left": [
+            {
+              "n": 5,
+              "title": "Conflict Anatomy & Resolution",
+              "color": "teal",
+              "blocks": [
+                {
+                  "code": "# 1. Inside conflicted settings.py:\n<<<<<<< HEAD\nDATABASE_PORT = 5432  # Production port\n=======\nDATABASE_PORT = 5433  # Staging update\n>>>>>>> feature/port-update\n\n# 2. Pick desired line, delete markers, then:\ngit add settings.py\ngit commit -m \"fix: resolve database port conflict\"",
+                  "label": "Conflict markers & resolution"
+                },
+                {
+                  "out": "[main 9a2b1c4] fix: resolve database port conflict\n 1 file changed, 1 insertion(+), 1 deletion(-)",
+                  "label": "Resolution commit output"
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "n": 6,
+              "title": "Remote Best Practices",
+              "color": "green",
+              "blocks": [
+                {
+                  "ul": [
+                    "**Set Upstream Tracking:** Use `git push -u origin <branch>` once.",
+                    "**Rebase Before Push:** `git pull --rebase` avoids messy merge bubbles.",
+                    "**Small Focused PRs:** Keep PRs under 300 lines for fast review.",
+                    "**Protected Branches:** Mandate peer reviews and CI checks on `main`."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": 7,
+              "title": "Remote Sync Mistakes & Fixes",
+              "color": "red",
+              "blocks": [
+                {
+                  "ul": [
+                    "Push rejected (non-fast-forward). Fix: Run `git pull --rebase`, then push.",
+                    "Raw `git push --force` on main. Fix: Use `--force-with-lease`.",
+                    "Panic on conflict markers. Fix: Run `git merge --abort`.",
+                    "Pushed to wrong remote branch. Fix: Set `push.default simple`."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "full",
+          "boxes": [
+            {
+              "n": 8,
+              "title": "Remember",
+              "color": "blue",
+              "blocks": [
+                {
+                  "remember": "Fetch is safe inspection; Pull is fetch plus merge. Resolve markers, stage, and commit to settle conflicts."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "footer": [
+        { "kind": "use", "text": "Continuous Integration (CI) systems trigger builds and test suites on git push events." },
+        { "kind": "interview", "text": "Q: git fetch vs git pull? A: Fetch downloads objects without modifying working files; pull merges them." },
+        { "kind": "pro", "text": "Configure `git config --global pull.rebase true` to keep pull histories clean and linear." }
+      ]
+    },
+    {
+      "title": "Git Basics Cheat Sheet & Interview Guide",
+      "subtitle": "12 key concepts, 10 must-know interview questions, and the ultimate Git formula",
+      "rows": [
+        {
+          "type": "grid",
+          "columns": 3,
+          "flex": "1.05 1 auto",
+          "boxes": [
+            {
+              "n": "1",
+              "title": "Snapshot Model",
+              "color": "blue",
+              "blocks": [
+                {
+                  "ul": [
+                    "Stores full trees, never diff deltas.",
+                    "Unchanged files are hard-linked.",
+                    "Commits are immutable snapshots.",
+                    "Keyed by 40-character SHA hash."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "2",
+              "title": "Three States",
+              "color": "green",
+              "blocks": [
+                {
+                  "ul": [
+                    "Modified: files edited in workdir.",
+                    "Staged: snapshot buffered in Index.",
+                    "Committed: saved in local repository.",
+                    "Move states via `add` and `commit`."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "3",
+              "title": "Branch Pointers",
+              "color": "orange",
+              "blocks": [
+                {
+                  "ul": [
+                    "41-byte pointer to commit SHA.",
+                    "Microsecond creation & zero bloat.",
+                    "`HEAD` references active branch.",
+                    "`git switch -c <name>` to branch."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "4",
+              "title": "switch & restore",
+              "color": "purple",
+              "blocks": [
+                {
+                  "ul": [
+                    "`git switch <branch>`: jump branch.",
+                    "`git restore <file>`: discard edits.",
+                    "`git restore --staged`: unstage.",
+                    "Modern replacement for checkout."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "5",
+              "title": "Merging Types",
+              "color": "teal",
+              "blocks": [
+                {
+                  "ul": [
+                    "Fast-Forward: moves branch label.",
+                    "3-Way: combines ancestor + heads.",
+                    "Squash: collapses branch to 1 commit.",
+                    "Abort with `git merge --abort`."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "6",
+              "title": "Rebase vs Merge",
+              "color": "yellow",
+              "blocks": [
+                {
+                  "ul": [
+                    "Merge preserves historic timeline.",
+                    "Rebase rewrites linear graph.",
+                    "Interactive: `git rebase -i HEAD~3`.",
+                    "Rule: Never rebase shared branches."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "7",
+              "title": "Remote Sync",
+              "color": "blue",
+              "blocks": [
+                {
+                  "ul": [
+                    "`origin`: default remote server.",
+                    "`git fetch`: safe remote download.",
+                    "`git pull`: fetch + merge in 1 step.",
+                    "`git push -u origin <branch>`: track."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "8",
+              "title": "Stashing Work",
+              "color": "green",
+              "blocks": [
+                {
+                  "ul": [
+                    "`git stash`: shelves dirty workdir.",
+                    "`git stash -u`: include untracked.",
+                    "`git stash pop`: restore & drop.",
+                    "`git stash list`: view all entries."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "9",
+              "title": "Undoing Mistakes",
+              "color": "red",
+              "blocks": [
+                {
+                  "ul": [
+                    "`git commit --amend`: edit last commit.",
+                    "`git revert <hash>`: safe public undo.",
+                    "`git reset --soft`: keep edits in index.",
+                    "`git reset --hard`: destructive reset."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "10",
+              "title": "Conflict Markers",
+              "color": "yellow",
+              "blocks": [
+                {
+                  "ul": [
+                    "`<<<<<<< HEAD`: your local code.",
+                    "`=======`: conflict separator.",
+                    "`>>>>>>>`: incoming branch code.",
+                    "Edit, remove markers, stage & commit."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "11",
+              "title": "The Reflog",
+              "color": "purple",
+              "blocks": [
+                {
+                  "ul": [
+                    "Log of every `HEAD` move on disk.",
+                    "Safety net: rescues lost commits.",
+                    "Recovers deleted branch commits.",
+                    "Recover: `git switch -c rescue <h>`."
+                  ]
+                }
+              ]
+            },
+            {
+              "n": "12",
+              "title": "Git Aliases",
+              "color": "teal",
+              "blocks": [
+                {
+                  "ul": [
+                    "Custom shortcuts in `~/.gitconfig`.",
+                    "`alias.st status` | `alias.sw switch`.",
+                    "`alias.lg \"log --oneline --graph\"`.",
+                    "Boosts daily developer velocity."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "full",
+          "flex": "1.45 1 auto",
+          "boxes": [
+            {
+              "n": null,
+              "title": "Top 10 Interview Questions",
+              "color": "plain",
+              "blocks": [
+                {
+                  "ol": [
+                    "**What is the difference between Git and SVN?** Git is distributed with full local snapshots; SVN is centralised and diff-based.",
+                    "**What happens internally when you commit?** Git writes blob objects for files, a tree object for directories, and a commit object with metadata.",
+                    "**What is the staging area (index) and why does it exist?** It provides an intermediate buffer allowing developers to craft atomic, granular commits.",
+                    "**Explain git fetch vs git pull.** Fetch updates remote-tracking references without touching working files; pull fetches and immediately merges.",
+                    "**How does Fast-Forward merge differ from 3-Way merge?** Fast-forward moves the branch label forward linearly; 3-way creates a merge commit from a common ancestor.",
+                    "**What is git rebase and when is it dangerous?** It replays commits on top of another base to linearize history. Dangerous if run on shared public branches.",
+                    "**What is a detached HEAD state?** HEAD points directly to a commit hash rather than a named branch; new commits risk being orphaned.",
+                    "**How do you resolve a merge conflict?** Open the conflicted file, manually choose desired lines, delete `<<<<<<<` and `>>>>>>>` markers, stage, and commit.",
+                    "**Difference between git reset, git revert, and git restore?** Reset rewrites branch pointer; revert creates an inverse commit; restore affects working tree / index.",
+                    "**How can you recover a commit lost to git reset --hard?** Run `git reflog` to identify the orphaned commit hash, then `git switch -c recovery <hash>`."
+                  ],
+                  "columns": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "full",
+          "boxes": [
+            {
+              "n": null,
+              "title": "The Ultimate Git Formula",
+              "color": "blue",
+              "blocks": [
+                {
+                  "remember": "Snapshot -> Stage -> Commit -> Branch -> Fetch -> Merge (Recover with Reflog)"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "footer": [
+        { "kind": "use", "text": "Daily reference sheet for code reviews, onboarding engineers, and resolving git blocks." },
+        { "kind": "interview", "text": "Mastering the DAG mental model answers 90% of all Git technical interview questions." },
+        { "kind": "pro", "text": "When stuck, run git status and git reflog before running destructive commands." }
+      ]
+    }
+  ],
+  "verification": [
+    { "fact": "Git switch and restore introduced in Git 2.23 (August 2019)", "status": "Checked", "source": "Official Git Release Notes v2.23.0" },
+    { "fact": "Default initial branch name changed from master to main in modern Git", "status": "Checked", "source": "Git 2.28+ init.defaultBranch config" },
+    { "fact": "SHA-1 hashing transition to SHA-256 (Object Format)", "status": "Checked", "source": "Git documentation on hash algorithms" },
+    { "fact": "Git merge default strategy in modern Git is 'ort' (replaces recursive)", "status": "Checked", "source": "Git 2.33+ Release Notes" }
+  ]
+}
