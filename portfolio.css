@@ -305,3 +305,13 @@ h2 { font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; line-height: 1.2; le
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
 }
+/* Native disclosure keeps installation instructions available without JavaScript. */
+.install-guide { margin-top: 18px; font-size: .85rem; line-height: 1.7; }
+.install-guide summary { cursor: pointer; font-weight: 700; padding: 10px 0; }
+.install-guide summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 4px; }
+.install-guide ol { padding-left: 22px; margin: 10px 0 16px; }
+.install-guide li + li { margin-top: 9px; }
+.install-guide p { margin: 12px 0; }
+.resource-collections { display: grid; gap: 48px; }
+.resource-collection > h3 { font-size: 24px; letter-spacing: -.7px; margin-bottom: 8px; color: var(--ink); }
+.resource-collection > p { color: var(--muted); line-height: 1.7; margin-bottom: 22px; }

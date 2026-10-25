@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#fce7f3"/><stop offset="1" stop-color="#ddd6fe"/></linearGradient>
+    <linearGradient id="dress" x2="1" y2="1"><stop stop-color="#375bb5"/><stop offset="1" stop-color="#182d72"/></linearGradient>
+  </defs>
+  <rect width="640" height="400" fill="url(#bg)"/>
+  <circle cx="65" cy="70" r="100" fill="#fff" opacity=".25"/>
+  <circle cx="584" cy="362" r="138" fill="#fff" opacity=".25"/>
+  <g font-family="system-ui, sans-serif" text-anchor="middle">
+    <path d="M116 58Q103 23 145 24Q174 5 204 25Q240 5 269 25Q307 6 339 26Q389 6 412 36Q463 20 477 55Q528 55 516 99Q546 141 504 158Q515 191 472 192H145Q104 195 112 161Q74 135 97 105Q74 74 116 58" fill="#fffcff" stroke="#d8c6e7" stroke-width="2"/>
+    <text x="307" y="77" fill="#8e699a" font-size="13" letter-spacing="2">PIXELPAL</text>
+    <text x="307" y="108" fill="#493b59" font-size="20" font-weight="600">Hey! Time for a sip of water.</text>
+    <g font-size="12" font-weight="600">
+      <rect x="156" y="131" width="65" height="32" rx="16" fill="#e7f4ee"/><text x="188" y="151" fill="#3d725e">Done</text>
+      <rect x="231" y="131" width="61" height="32" rx="16" fill="#f3edfa"/><text x="261" y="151" fill="#665075">Skip</text>
+      <rect x="302" y="131" width="149" height="32" rx="16" fill="#f3edfa"/><text x="376" y="151" fill="#665075">Remind in 5 min</text>
+    </g>
+    <ellipse cx="343" cy="207" rx="12" ry="8" fill="#fffcff"/><ellipse cx="354" cy="226" rx="6" ry="5" fill="#fffcff"/>
+  </g>
+  <ellipse cx="320" cy="377" rx="49" ry="7" fill="#463060" opacity=".14"/>
+  <path d="M295 272Q278 238 292 220Q319 199 344 222Q355 241 343 275Z" fill="#282333"/>
+  <ellipse cx="320" cy="242" rx="21" ry="27" fill="#eab18e"/>
+  <path d="M298 232Q297 211 320 215Q344 214 343 237Q330 228 328 220Q317 235 298 232" fill="#282333"/>
+  <path d="M299 275Q320 264 341 276L356 367Q326 386 283 368Z" fill="url(#dress)"/>
+  <path d="M338 273L293 308L307 377L354 367Z" fill="#284a9e"/>
+  <path d="M302 280L282 307L267 289" fill="none" stroke="#eab18e" stroke-width="10" stroke-linecap="round"/>
+  <path d="M340 280L350 311L321 320" fill="none" stroke="#eab18e" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="312" cy="241" r="2" fill="#302639"/><circle cx="329" cy="241" r="2" fill="#302639"/>
+  <path d="M314 253Q321 258 327 252" fill="none" stroke="#9c4b57" stroke-width="2" stroke-linecap="round"/>
+</svg>

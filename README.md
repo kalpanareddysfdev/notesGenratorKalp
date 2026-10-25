@@ -7,6 +7,32 @@ This directory contains the study note and document generator project, assets, a
 
 The home page introduces Kalpana Reddy, Salesforce Tech Lead at Thoughtworks and an AI enthusiast learning in public. It includes a searchable library of tools and PDF notes. The connection section and contact page link to [Instagram (@kalpanadecoded)](https://www.instagram.com/kalpanadecoded/), [GitHub (@kalpanareddysfdev)](https://github.com/kalpanareddysfdev), and [LinkedIn](https://www.linkedin.com/in/kalpana-reddy-165485202/).
 
+The home-page About section and [about.html](./about.html) describe her 6+ years
+of Salesforce experience, current Thoughtworks role, certifications, and
+six-month AI-assisted building journey. The homepage keeps this introduction
+short, with detailed credentials on the dedicated About page.
+About uses [about.css](./about.css) for responsive skill cards, certification
+cards, a career timeline, education, and five project links. [about.js](./about.js)
+shares the portfolio's saved theme preference without loading library logic.
+Only verified resume facts are included; no graduation year, degree specialty,
+or Thoughtworks start date is inferred.
+Kalpana also supplied her current involvement in Salesforce-to-in-house CRM
+migration and an AI/agent-enabled experience layer for sellers and marketers
+working across Marketo, Salesforce CPQ, Creatio, and other SaaS tools. Her
+Salesforce technical leadership and AI app contributions are two separate
+projects, explicitly distinguished in the profile. The tool list describes
+the workflow context, not a claim of
+expertise in every platform. Public descriptions remain high-level and separate
+professional applied AI experience from personal AI-learning projects.
+The resource
+library groups apps separately from learning notes while preserving combined
+search and filters. PGMaaya links to its public website at https://pgmaaya.com
+instead of directly opening the app. It manages PG rooms, beds,
+vacancies, and tenants and is distinct from the investment-planning tool.
+Resume details were used only as background; the private resume PDF is not
+published or linked. The current role and AI-learning timeline were supplied
+directly by Kalpana and take precedence over older resume employment dates.
+
 - [index.html](./index.html) contains the portfolio content and the curated resource cards, which remain usable without JavaScript.
 - [portfolio.css](./portfolio.css) follows the supplied updated UI reference: amber/rose/indigo gradients, glass-style navigation, rounded resource cards, topic filters, and a dark contact panel, with a complete optional dark theme.
 - [kalpana-avatar.jpg](./kalpana-avatar.jpg) is the supplied anime avatar used in the hero profile; [kalpana-avatar-small.jpg](./kalpana-avatar-small.jpg) is its lightweight header version. Document previews continue to show their own content.
@@ -14,7 +40,8 @@ The home page introduces Kalpana Reddy, Salesforce Tech Lead at Thoughtworks and
 - [portfolio.js](./portfolio.js) handles search, category filters, theme preferences, and discovery of new resources from the public repository.
 - The portfolio defaults to dark mode for new visitors; a visitor's saved light/dark choice takes precedence.
 - Topic filters combine with categories and text search. Counts reflect the resources actually available, including discovered additions.
-- The curated library includes three tools and seven PDFs. [DayDone](https://daydone.pgmaaya.com/) is an externally hosted, installable daily planner for habits, meals, goals, and insights. Its card describes device-local storage and backup requirements; its source project remains separate from this portfolio.
+- The curated library includes five apps/tools and seven PDFs. [DayDone](https://daydone.pgmaaya.com/) is an externally hosted, installable daily planner for habits, meals, goals, and insights. Its card describes device-local storage and backup requirements; its source project remains separate from this portfolio.
+- PixelPal is an Apple Silicon Mac desktop wellness companion. Its card includes an expandable installation guide, the unsigned/not-notarized warning, and a direct installer link to the [Mac beta prerelease](https://github.com/kalpanareddysfdev/notesGenratorKalp/releases/tag/pixelpal-v0.1.0-beta.3). The installer is a release asset, not a committed website file; Windows and Intel Mac builds are not yet available. Update the card version, asset URL, size, and release notes together for future releases.
 - The contact form opens a pre-filled email draft in the visitor's mail app; it does not submit to a backend, store messages, or claim delivery. The tools and PDF links use the real existing files, not the demo modals from the reference design.
 - Markdown files, hidden files, and site information pages are excluded from the library.
 - Resource cards have topic labels, content summaries, and separate Open and Download links for documents. Downloads use same-origin file URLs and the browser's native `download` attribute.

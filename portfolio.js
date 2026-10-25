@@ -11,6 +11,27 @@ const resultCount = document.getElementById('resultCount');
 const loadStatus = document.getElementById('loadStatus');
 let activeCategory = 'all';
 let activeTopic = 'all';
+const collections = {};
+for (const [category, title, description] of [
+  ['apps', 'Apps & tools', 'Five projects for everyday planning, property, wellness, and learning.'],
+  ['docs', 'Learning notes & guides', 'Reference material from my Salesforce, cloud, and AI learning journey.']
+]) {
+  const section = document.createElement('section');
+  section.className = 'resource-collection';
+  section.setAttribute('aria-labelledby', `${category}-collection-title`);
+  const heading = document.createElement('h3');
+  heading.id = `${category}-collection-title`;
+  heading.textContent = title;
+  const intro = document.createElement('p');
+  intro.textContent = description;
+  const cards = document.createElement('div');
+  cards.className = 'resource-grid';
+  grid.querySelectorAll(`.resource-card[data-category="${category}"]`).forEach(card => cards.append(card));
+  section.append(heading, intro, cards);
+  grid.append(section);
+  collections[category] = { section, cards };
+}
+grid.classList.replace('resource-grid', 'resource-collections');
 const topicFilters = document.getElementById('topicFilters');
 const topicButtons = topicFilters.querySelectorAll('.topic-btn');
 const menuToggle = document.getElementById('menuToggle');
@@ -71,6 +92,9 @@ function filterCards() {
   });
   resultCount.textContent = `${visibleCount} ${visibleCount === 1 ? 'resource' : 'resources'} to explore`;
   emptyState.hidden = visibleCount !== 0;
+  Object.values(collections).forEach(({ section, cards }) => {
+    section.hidden = !Array.from(cards.children).some(card => !card.hidden);
+  });
   filterButtons.forEach(button => {
     const category = button.dataset.category;
     const count = category === 'all' ? grid.querySelectorAll('.resource-card').length : grid.querySelectorAll(`.resource-card[data-category="${category}"]`).length;
@@ -204,7 +228,8 @@ async function loadRepoFiles() {
       if (file.name.startsWith('.') || excludedPages.has(lowerName) || !/\.(html|pdf|docx?)$/i.test(file.name)) continue;
       const canonicalName = renamedFiles[file.name] || file.name;
       if (existingFiles.has(canonicalName.toLowerCase())) continue;
-      grid.append(createResourceCard(file));
+      const card = createResourceCard(file);
+      collections[card.dataset.category].cards.append(card);
       existingFiles.add(canonicalName.toLowerCase());
     }
     filterCards();
